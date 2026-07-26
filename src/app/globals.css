@@ -1,26 +1,579 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-vt323: var(--font-vt323);
+  --font-share-tech: var(--font-share-tech);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --term-bg: #090c05;
+  --term-fg: #00ff41;
+  --term-glow: rgba(0, 255, 65, 0.25);
+  --term-dim: rgba(0, 255, 65, 0.6);
+  --term-cursor: #00ff41;
+  --term-font: var(--font-share-tech), Courier New, monospace;
+  --term-scanline-opacity: 0.12;
+  --term-selection-bg: rgba(0, 255, 65, 0.3);
+  --term-selection-fg: #090c05;
+}
+
+[data-theme="amber"] {
+  --term-bg: #100a00;
+  --term-fg: #ffb000;
+  --term-glow: rgba(255, 176, 0, 0.35);
+  --term-dim: rgba(255, 176, 0, 0.6);
+  --term-cursor: #ffb000;
+  --term-scanline-opacity: 0.16;
+  --term-selection-bg: rgba(255, 176, 0, 0.3);
+  --term-selection-fg: #100a00;
+}
+
+[data-theme="matrix"] {
+  --term-bg: #010802;
+  --term-fg: #00ff66;
+  --term-glow: rgba(0, 255, 102, 0.4);
+  --term-dim: rgba(0, 255, 102, 0.65);
+  --term-cursor: #00ff66;
+  --term-scanline-opacity: 0.1;
+  --term-selection-bg: rgba(0, 255, 102, 0.35);
+  --term-selection-fg: #010802;
+}
+
+[data-theme="blood"] {
+  --term-bg: #0b0101;
+  --term-fg: #ff2a2a;
+  --term-glow: rgba(255, 42, 42, 0.45);
+  --term-dim: rgba(255, 42, 42, 0.6);
+  --term-cursor: #ff2a2a;
+  --term-scanline-opacity: 0.22;
+  --term-selection-bg: rgba(255, 42, 42, 0.3);
+  --term-selection-fg: #0b0101;
+}
+
+[data-theme="hacker"] {
+  --term-bg: #03080f;
+  --term-fg: #00f0ff;
+  --term-glow: rgba(0, 240, 255, 0.3);
+  --term-dim: rgba(0, 240, 255, 0.65);
+  --term-cursor: #00f0ff;
+  --term-scanline-opacity: 0.1;
+  --term-selection-bg: rgba(0, 240, 255, 0.35);
+  --term-selection-fg: #03080f;
+}
+
+[data-theme="crt"] {
+  --term-bg: #000c00;
+  --term-fg: #39ff14;
+  --term-glow: rgba(57, 255, 20, 0.6);
+  --term-dim: rgba(57, 255, 20, 0.7);
+  --term-cursor: #39ff14;
+  --term-scanline-opacity: 0.28;
+  --term-selection-bg: rgba(57, 255, 20, 0.4);
+  --term-selection-fg: #000c00;
+}
+
+[data-theme="white"] {
+  --term-bg: #fafafa;
+  --term-fg: #18181b;
+  --term-glow: rgba(24, 24, 27, 0.05);
+  --term-dim: rgba(24, 24, 27, 0.6);
+  --term-cursor: #18181b;
+  --term-scanline-opacity: 0.03;
+  --term-selection-bg: #18181b;
+  --term-selection-fg: #fafafa;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--term-bg);
+  color: var(--term-fg);
+  font-family: var(--term-font);
+  overflow: hidden;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  user-select: text;
 }
+
+::selection {
+  background-color: var(--term-selection-bg);
+  color: var(--term-selection-fg);
+}
+
+/* Custom scrollbars for the terminal */
+.terminal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.terminal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+.terminal-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--term-dim);
+  border-radius: 4px;
+}
+.terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--term-fg);
+}
+
+/* CRT Screen FX */
+.crt-container {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+}
+
+.crt-container::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 20;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Curved Bezel Overlay */
+.crt-bezel {
+  pointer-events: none;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  box-shadow: inset 0 0 120px rgba(0,0,0,0.85);
+  z-index: 30;
+}
+
+/* Scanlines moving */
+.scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 0%,
+    rgba(18, 16, 16, 0) 95%,
+    rgba(0, 0, 0, 0.3) 95%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  background-size: 100% 30px;
+  opacity: var(--term-scanline-opacity);
+  z-index: 22;
+  pointer-events: none;
+  animation: scanlineScroll 12s linear infinite;
+}
+
+/* Screen Flicker */
+.crt-flicker {
+  animation: crtFlicker 0.15s infinite;
+}
+
+/* Glitch Animations */
+@keyframes scanlineScroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+@keyframes crtFlicker {
+  0% { opacity: 0.99; }
+  50% { opacity: 0.96; }
+  100% { opacity: 0.99; }
+}
+
+/* Glitched scanlines for horror mode */
+.glitch-scanlines {
+  animation: glitchScan 0.5s infinite steps(2);
+}
+
+@keyframes glitchScan {
+  0% { background-position: 0 0; filter: hue-rotate(0deg); }
+  50% { background-position: 5px 10px; filter: hue-rotate(90deg) contrast(1.5); }
+  100% { background-position: -5px -20px; filter: hue-rotate(0deg); }
+}
+
+/* Flicker effect for the whole screen during extreme glitch */
+.screen-glitch-flicker {
+  animation: screenGlitch 0.2s infinite;
+}
+
+@keyframes screenGlitch {
+  0% { transform: translate(0, 0) skew(0deg); filter: invert(0); }
+  20% { transform: translate(-2px, 5px) skew(2deg); }
+  40% { transform: translate(3px, -2px) skew(-3deg); filter: invert(0.05); }
+  60% { transform: translate(-5px, 2px) skew(1deg); }
+  80% { transform: translate(2px, 1px) skew(-1deg); }
+  100% { transform: translate(0, 0) skew(0deg); filter: invert(0); }
+}
+
+.text-glitch {
+  position: relative;
+}
+
+.text-glitch::before,
+.text-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--term-bg);
+}
+
+.text-glitch::before {
+  left: 2px;
+  text-shadow: -1px 0 #ff0000;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitchAnim 5s infinite linear alternate-reverse;
+}
+
+.text-glitch::after {
+  left: -2px;
+  text-shadow: -1px 0 #0000ff, 0 1px #0000ff;
+  clip: rect(85px, 450px, 140px, 0);
+  animation: glitchAnim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitchAnim {
+  0% { clip: rect(15px, 9999px, 66px, 0); }
+  10% { clip: rect(34px, 9999px, 55px, 0); }
+  20% { clip: rect(81px, 9999px, 19px, 0); }
+  30% { clip: rect(5px, 9999px, 85px, 0); }
+  40% { clip: rect(95px, 9999px, 41px, 0); }
+  50% { clip: rect(27px, 9999px, 73px, 0); }
+  60% { clip: rect(62px, 9999px, 8px, 0); }
+  70% { clip: rect(49px, 9999px, 92px, 0); }
+  80% { clip: rect(12px, 9999px, 50px, 0); }
+  90% { clip: rect(88px, 9999px, 32px, 0); }
+  100% { clip: rect(54px, 9999px, 70px, 0); }
+}
+
+@keyframes glitchAnim2 {
+  0% { clip: rect(65px, 9999px, 5px, 0); }
+  10% { clip: rect(5px, 9999px, 38px, 0); }
+  20% { clip: rect(98px, 9999px, 12px, 0); }
+  30% { clip: rect(21px, 9999px, 62px, 0); }
+  40% { clip: rect(43px, 9999px, 84px, 0); }
+  50% { clip: rect(78px, 9999px, 90px, 0); }
+  60% { clip: rect(12px, 9999px, 49px, 0); }
+  70% { clip: rect(85px, 9999px, 23px, 0); }
+  80% { clip: rect(33px, 9999px, 67px, 0); }
+  90% { clip: rect(56px, 9999px, 15px, 0); }
+  100% { clip: rect(92px, 9999px, 80px, 0); }
+}
+
+/* macOS Genie Minimize Transition */
+.window-genie-minimize {
+  transform: translate(0, 80vh) scale(0.01) skew(15deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.65s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.window-genie-restore {
+  transform: translate(0, 0) scale(1) skew(0deg);
+  opacity: 1;
+  transition: all 0.65s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+/* System Deletion Window Shaking */
+.shaking-window {
+  animation: shake 0.15s infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(0px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(2px, 1px) rotate(-1deg); }
+  85% { transform: translate(-1px, -1px) rotate(1deg); }
+  100% { transform: translate(1px, -2px) rotate(0deg); }
+}
+
+/* Glitch Pikachu background animation helper */
+.glitch-bg-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.06),
+    rgba(0, 255, 0, 0.02),
+    rgba(0, 0, 255, 0.06)
+  );
+  background-size: 100% 4px, 6px 100%;
+}
+
+/* ==================================================
+   DIMENSION TIME-TRAVEL OVERRIDES
+   ================================================== */
+
+/* 1984 - Retro Macintosh 1-Bit Mode */
+[data-dimension="1984"] {
+  --term-bg: #000000;
+  --term-fg: #ffffff;
+  --term-glow: transparent;
+  --term-dim: #888888;
+  --term-cursor: #ffffff;
+  --term-font: var(--font-vt323), Courier, monospace;
+  --term-scanline-opacity: 0;
+  --term-selection-bg: #ffffff;
+  --term-selection-fg: #000000;
+  background-color: #d8d8d8 !important;
+  background-image: radial-gradient(#000000 15%, transparent 16%) !important;
+  background-size: 8px 8px !important;
+}
+
+[data-dimension="1984"] .scanlines,
+[data-dimension="1984"] .crt-bezel {
+  display: none !important;
+}
+
+/* 1995 - Windows 95 Mode */
+[data-dimension="1995"] {
+  --term-bg: #000000;
+  --term-fg: #00ff41;
+  --term-glow: transparent;
+  --term-dim: #008000;
+  --term-cursor: #00ff41;
+  --term-font: var(--font-vt323), Tahoma, sans-serif;
+  --term-scanline-opacity: 0;
+  --term-selection-bg: #000080;
+  --term-selection-fg: #ffffff;
+  background-color: #008080 !important;
+  background-image: none !important;
+}
+
+[data-dimension="1995"] .scanlines,
+[data-dimension="1995"] .crt-bezel {
+  display: none !important;
+}
+
+/* 2099 - Cyberpunk HUD Mode */
+[data-dimension="2099"] {
+  --term-bg: rgba(6, 12, 20, 0.95);
+  --term-fg: #00f0ff;
+  --term-glow: rgba(0, 240, 255, 0.4);
+  --term-dim: rgba(0, 240, 255, 0.65);
+  --term-cursor: #00f0ff;
+  --term-font: var(--font-share-tech), Courier New, monospace;
+  --term-scanline-opacity: 0.35;
+  --term-selection-bg: #00f0ff;
+  --term-selection-fg: #060c20;
+}
+
+/* Futuristic neon cyan and purple grid background for 2099 */
+[data-dimension="2099"].min-h-screen {
+  background-color: #02050a !important;
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px) !important;
+  background-size: 30px 30px !important;
+  background-position: center !important;
+}
+
+[data-dimension="2099"] .terminal-scrollbar * {
+  text-shadow: 0 0 5px rgba(0, 240, 255, 0.8), 0 0 10px rgba(0, 240, 255, 0.3) !important;
+}
+
+/* Slanted 2099 3D parallax helper */
+.cyberpunk-tilt {
+  box-shadow: 
+    -15px 30px 45px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(0, 240, 255, 0.45),
+    0 0 60px rgba(217, 70, 239, 0.2) !important;
+}
+
+/* Dimension Window Frame Styles */
+.dimension-window {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.85);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+}
+
+[data-dimension="1995"] .dimension-window {
+  border-radius: 0px !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  background-color: #c0c0c0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+[data-dimension="1984"] .dimension-window {
+  border-radius: 0px !important;
+  border: 2px solid #000000 !important;
+  outline: 1px solid #000000 !important;
+  outline-offset: -4px !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+[data-dimension="2099"] .dimension-window {
+  border-radius: 0px !important;
+  border: 2px solid #00f0ff !important;
+  background-color: rgba(6, 12, 20, 0.95) !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), 0 0 40px rgba(217, 70, 239, 0.15) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Hide terminal content during meltdown to let canvas take over seamlessly */
+[data-melting="true"] .terminal-scrollbar,
+[data-melting="true"] .close-box,
+[data-melting="true"] .font-bold.flex.items-center, /* Win95 title text */
+[data-melting="true"] .flex-1.flex.items-center.gap-2, /* Traffic lights */
+[data-melting="true"] .bg-\[\#000080\], /* Win95 titlebar container */
+[data-melting="true"] .bg-white.border-b-2.border-black, /* Mac 1984 titlebar container */
+[data-melting="true"] .px-4.py-3.flex.items-center /* macOS titlebar container */ {
+  opacity: 0 !important;
+  transition: opacity 0.15s ease-out !important;
+}
+
+/* ==================================================
+   TORNADO VORTEX SPIN ANIMATIONS
+   ================================================== */
+.tornado-active {
+  animation: tornado-spin 10s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  pointer-events: none !important;
+  transform-origin: center center !important;
+  transition: all 0.5s ease-in-out;
+}
+
+@keyframes tornado-spin {
+  0% {
+    transform: rotate(0deg) scale(1) translate(0, 0);
+    filter: blur(0px);
+    opacity: 1;
+  }
+  15% {
+    transform: rotate(180deg) scale(0.8) translate(0, -30px);
+    filter: blur(2px);
+    opacity: 0.9;
+  }
+  30% {
+    transform: rotate(540deg) scale(0.5) translate(0, -100px);
+    filter: blur(4px);
+    opacity: 0.7;
+  }
+  45% {
+    transform: rotate(1080deg) scale(0.2) translate(0, -300px);
+    filter: blur(8px);
+    opacity: 0.3;
+  }
+  50% {
+    transform: rotate(1800deg) scale(0) translate(0, -600px);
+    filter: blur(15px);
+    opacity: 0;
+  }
+  75% {
+    /* Keep sucked out of the screen */
+    transform: rotate(1800deg) scale(0) translate(0, -600px);
+    filter: blur(15px);
+    opacity: 0;
+  }
+  85% {
+    /* Begin spin-back in reverse */
+    transform: rotate(720deg) scale(0.4) translate(0, -200px);
+    filter: blur(8px);
+    opacity: 0.4;
+  }
+  95% {
+    transform: rotate(180deg) scale(1.05) translate(0, 20px);
+    filter: blur(3px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(0deg) scale(1) translate(0, 0);
+    filter: blur(0px);
+    opacity: 1;
+  }
+}
+
+/* Hacker Workstation Custom CRT/Workstation Styles */
+.dirty-glass {
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(5, 5, 5, 0.96) 100%);
+  position: relative;
+}
+.dirty-glass::before {
+  content: " ";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: 
+    radial-gradient(circle, #fff 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 100px 100px, 100% 4px;
+  z-index: 10;
+}
+.dirty-glass::after {
+  content: " ";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.01) 100%);
+  z-index: 11;
+}
+
+/* Warm up animation (horizontal line expanding to full window) */
+@keyframes monitor-warmup {
+  0% {
+    transform: scaleX(0) scaleY(0.005);
+    opacity: 0;
+    filter: brightness(3);
+  }
+  30% {
+    transform: scaleX(1) scaleY(0.005);
+    opacity: 0.85;
+    filter: brightness(2.5);
+  }
+  70% {
+    transform: scaleX(1) scaleY(1);
+    opacity: 0.98;
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: scaleX(1) scaleY(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+.monitor-warmup-anim {
+  animation: monitor-warmup 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scanline reveal */
+@keyframes scanline-reveal {
+  0% {
+    clip-path: inset(0 0 100% 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.scanline-reveal-anim {
+  animation: scanline-reveal 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* CRT signal interference glitch */
+@keyframes signal-glitch {
+  0%, 100% { filter: hue-rotate(0deg); }
+  92% { filter: hue-rotate(0deg); }
+  93% { filter: hue-rotate(90deg); }
+  94% { filter: grayscale(1); }
+  95% { filter: hue-rotate(0deg); }
+}
+.signal-glitch-anim {
+  animation: signal-glitch 4s infinite ease-in-out;
+}
+
