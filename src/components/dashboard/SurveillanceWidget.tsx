@@ -1,6 +1,6 @@
 "use client";
 
-import { AsciiArt } from "../ui/sa7bi";
+import { AsciiArt } from "@/components/ui/choso-ascii";
 
 export function AsciiArtDemo() {
   return (
@@ -12,3 +12,4 @@ export function AsciiArtDemo() {
 
 export { AsciiArtDemo as SurveillanceWidget };
 export default AsciiArtDemo;
+
