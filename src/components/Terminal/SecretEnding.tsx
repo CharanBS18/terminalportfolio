@@ -49,8 +49,8 @@ export function SecretEnding({ onClose }: SecretEndingProps) {
                                               v3.1
   +-----------------------------------------------------------+
   |  IDENTITY UNLOCKED: Charan B.S.                           |
-  |  ROLE:              Lead Developer & UX Architect         |
-  |  STATUS:            Autonomous Software Creator           |
+  |  ROLE:              Security Researcher & Pentester       |
+  |  STATUS:            Offensive Security Specialist         |
   +-----------------------------------------------------------+
   `;
 

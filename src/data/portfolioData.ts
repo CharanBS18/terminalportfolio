@@ -29,42 +29,42 @@ export interface Education {
 
 export const PORTFOLIO_DATA = {
   name: "Charan BS",
-  title: "AI & Full-Stack Developer // ENG-AI&ML",
+  title: "Offensive Security & Penetration Testing // Cybersecurity",
   location: "Hassan, India",
-  bio: "I build AI-powered web products with clear interfaces. Focused on AI/ML applications, data-aware tools, full-stack prototypes, and interactive frontends that feel polished enough to show to real users.",
+  bio: "I focus on offensive security, penetration testing, and security research. Dedicated to web application security assessments, network penetration testing, security automation, and discovering systemic vulnerabilities.",
   
   projects: [
     {
-      name: "Plant Health RAG",
-      slug: "plant-health-rag",
-      description: "A Streamlit-based Retrieval-Augmented Generation (RAG) plant diagnosis application. Resolves the issue of scattered botanical disease information by consolidating domain-aware botanical records into retrieval-backed chat responses.",
-      tech: ["Python", "Streamlit", "RAG", "LLM APIs", "Data Retrieval"],
-      role: "Developer",
-      link: "https://planthealthrag-fsggg4j6desaboqkfomqeb.streamlit.app"
+      name: "Automated Recon & Vulnerability Suite",
+      slug: "vuln-recon-suite",
+      description: "A modular reconnaissance and vulnerability assessment toolkit designed for automated target enumeration, port discovery, HTTP service fingerprinting, and security misconfiguration detection.",
+      tech: ["Python", "Bash", "Nmap Scripting", "AsyncIO", "Socket Programming"],
+      role: "Security Researcher",
+      link: "https://github.com/charanbs18/recon-automation-toolkit"
     },
     {
-      name: "Lumina Volt EV Finder",
-      slug: "lumina-volt-ev",
-      description: "A spatial charging-station finder interface resolving flat user experiences in EV mapping tools. Integrates premium WebGL 3D paths, sleek overlays, and smooth coordinate-mapping interactions.",
-      tech: ["Three.js", "WebGL", "TypeScript", "Tailwind CSS", "Framer Motion"],
-      role: "Creative UI Developer",
-      link: "https://charanbs18.github.io/EV-project-PPT/"
+      name: "Web Application Security Testing Lab",
+      slug: "web-pentest-lab",
+      description: "An interactive penetration testing environment focused on identifying and reproducing OWASP Top 10 vulnerabilities including SQL Injection, Cross-Site Scripting (XSS), IDOR, and broken authentication mechanisms.",
+      tech: ["Burp Suite", "OWASP ZAP", "Python", "Docker", "SQLMap"],
+      role: "Security Tester",
+      link: "https://github.com/charanbs18/web-pentest-lab"
     },
     {
-      name: "Cinematic 3D Car",
-      slug: "cinematic-3d-car",
-      description: "Scroll-driven interactive 3D product showcase demonstrating high-fidelity rendering control, optimized render loops, and micro-interaction timings.",
-      tech: ["Three.js", "Vite", "React Three Fiber", "Tailwind CSS"],
-      role: "Motion Engineer",
-      link: "https://charanbs18.github.io/carwebsite/"
+      name: "Network Traffic & Packet Analyzer",
+      slug: "network-packet-analyzer",
+      description: "A lightweight raw socket packet sniffer and security telemetry analyzer built to capture, inspect, and dissect TCP/UDP streams for anomalous payloads and protocol abuse.",
+      tech: ["Go", "Wireshark", "PCAP Analysis", "Raw Sockets", "TCP/IP"],
+      role: "Security Analyst",
+      link: "https://github.com/charanbs18/packet-sniffer-go"
     },
     {
-      name: "Cinematic Drone Showcase",
-      slug: "cinematic-drone-showcase",
-      description: "Interactive 3D product showcase driven by scroll pathing animations and responsive interface controls for hardware demos.",
-      tech: ["Three.js", "WebGL", "Vite", "Scroll Controls"],
-      role: "3D Developer",
-      link: "https://charanbs18.github.io/drone-website/"
+      name: "Offensive Security Research & CTF Labs",
+      slug: "ctf-exploit-lab",
+      description: "A curated repository of capture-the-flag challenge writeups, custom privilege escalation scripts, payload generation techniques, and binary vulnerability analysis notes.",
+      tech: ["Linux", "Metasploit", "GDB", "Bash Scripting", "Privilege Escalation"],
+      role: "Security Researcher",
+      link: "https://github.com/charanbs18/security-research-ctf"
     },
     {
       name: "Secret Project █████",
@@ -78,14 +78,14 @@ export const PORTFOLIO_DATA = {
   ] as Project[],
 
   skills: [
-    { name: "React / Frontend", level: 92 },
-    { name: "Three.js / 3D UI", level: 85 },
-    { name: "Python / Flask", level: 90 },
-    { name: "AI / ML / RAG", level: 90 },
-    { name: "Node.js / Express", level: 88 },
-    { name: "Java / Systems", level: 75 },
-    { name: "SQL / MySQL / MongoDB", level: 85 },
-    { name: "Figma / Blender", level: 80 }
+    { name: "Penetration Testing", level: 90 },
+    { name: "Web App Security / OWASP", level: 92 },
+    { name: "Network Security & PCAP", level: 88 },
+    { name: "Vulnerability Assessment", level: 90 },
+    { name: "Burp Suite & Recon Tools", level: 92 },
+    { name: "Linux & Privilege Esc", level: 88 },
+    { name: "Python / Security Scripting", level: 85 },
+    { name: "Metasploit & Exploits", level: 80 }
   ] as Skill[],
 
   // TODO: Add experience logs once details are provided by user
@@ -98,7 +98,7 @@ export const PORTFOLIO_DATA = {
       school: "Hassan Engineering College (TODO)",
       // TODO: Add actual academic period dates
       period: "TODO",
-      details: "Department: ENG-AI&ML. Focus on AI systems, data architectures, and full-stack development."
+      details: "Department: ENG-AI&ML. Focus on Cybersecurity, Network Protocols, Secure Systems, and AI-driven Security Analytics."
     }
   ] as Education[],
 
@@ -136,13 +136,7 @@ export const PORTFOLIO_DATA = {
     "A SQL query goes into a bar, walks up to two tables and asks: 'Can I join you?'"
   ],
 
-  certifications: [
-    { name: "AWS Certification", issuer: "Amazon Web Services", ref: "AWS certificate.pdf" },
-    { name: "Cybersecurity Simulation", issuer: "Security Job Simulation", ref: "Cyber Job Simulation certificate.pdf" },
-    { name: "Data Analysis", issuer: "Data & Analytics", ref: "Data analysis certifcate.pdf" },
-    { name: "Vista Certificate", issuer: "Professional Course Completion", ref: "Vista Certificate" },
-    { name: "Data Labeling", issuer: "Forge Machine Learning", ref: "forge data labeling certificate.pdf" }
-  ],
+  certifications: [] as Array<{ name: string; issuer: string; ref: string }>,
 
   ascii: {
     hacker: `

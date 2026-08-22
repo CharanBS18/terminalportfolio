@@ -43,12 +43,12 @@ function NeofetchRenderer() {
       <div className="mt-4 lg:mt-0 flex-1 border-t lg:border-t-0 lg:border-l border-zinc-800 pt-4 lg:pt-0 lg:pl-6 space-y-1 text-inherit w-full">
         <div className="text-zinc-500">--------------------------------</div>
         <div><span className="text-[var(--term-fg)] font-bold">Name</span>        : Charan B S</div>
-        <div><span className="text-[var(--term-fg)] font-bold">Role</span>        : AI & Full Stack Developer</div>
+        <div><span className="text-[var(--term-fg)] font-bold">Role</span>        : Offensive Security & Penetration Testing</div>
         <div><span className="text-[var(--term-fg)] font-bold">Location</span>    : Hassan, India</div>
         <div><span className="text-[var(--term-fg)] font-bold">OS</span>          : Charan OS v3.1</div>
-        <div><span className="text-[var(--term-fg)] font-bold">Department</span>  : ENG-AI&ML</div>
-        <div><span className="text-[var(--term-fg)] font-bold">Languages</span>   : Python, JavaScript, TypeScript, Java, C</div>
-        <div><span className="text-[var(--term-fg)] font-bold">Frameworks</span>  : Next.js, React, Streamlit, Express</div>
+        <div><span className="text-[var(--term-fg)] font-bold">Focus</span>       : Web App Security, Pentesting, Network Defense</div>
+        <div><span className="text-[var(--term-fg)] font-bold">Toolkit</span>     : Burp Suite, Nmap, Wireshark, Metasploit</div>
+        <div><span className="text-[var(--term-fg)] font-bold">Languages</span>   : Python, Bash, Go, JavaScript, C</div>
         <div><span className="text-[var(--term-fg)] font-bold">GitHub</span>      : github.com/charanbs18</div>
         <div><span className="text-[var(--term-fg)] font-bold">Status</span>      : <span className="text-green-400 font-bold animate-pulse">Online</span></div>
         <div className="text-zinc-500">--------------------------------</div>

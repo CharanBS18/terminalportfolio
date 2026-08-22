@@ -165,11 +165,11 @@ export const portfolioCommands: Command[] = [
       const neofetchLines = [
         "      \x1b[1;36m██████\x1b[0m       OS          : Charan OS v3.1",
         "    \x1b[1;36m██████████\x1b[0m     User        : Charan BS",
-        "   \x1b[1;36m███      ███\x1b[0m    Role        : AI & Full-Stack Developer",
+        "   \x1b[1;36m███      ███\x1b[0m    Role        : Offensive Security & Penetration Testing",
         "   \x1b[1;36m███\x1b[0m             Location    : Hassan, India",
-        "   \x1b[1;36m███      ███\x1b[0m    Languages   : Python, JavaScript, TypeScript, Java, C",
-        "    \x1b[1;36m██████████\x1b[0m     Frameworks  : React, Next.js, Streamlit, Express, Flask",
-        "      \x1b[1;36m██████\x1b[0m       Capabilities: RAG Apps, 3D UI, Data Systems"
+        "   \x1b[1;36m███      ███\x1b[0m    Focus       : Web App Security, Penetration Testing, Network Defense",
+        "    \x1b[1;36m██████████\x1b[0m     Toolkit     : Burp Suite, Nmap, Wireshark, Metasploit, Linux",
+        "      \x1b[1;36m██████\x1b[0m       Scripting   : Python, Bash, Go, Security Automation"
       ];
       
       let currentText = "";
@@ -198,12 +198,12 @@ export const portfolioCommands: Command[] = [
     execute: () => {
       const header = [
         "===========================================================",
-        "TECHNICAL SKILLS MATRIX",
+        "OFFENSIVE SECURITY SKILLS MATRIX",
         "==========================================================="
       ];
       
       const bars = PORTFOLIO_DATA.skills.map(skill => {
-        const paddedName = skill.name.padEnd(20, " ");
+        const paddedName = skill.name.padEnd(25, " ");
         const bar = drawProgressBar(skill.level, 25);
         return `  ${paddedName} [${bar}]`;
       });
@@ -213,9 +213,9 @@ export const portfolioCommands: Command[] = [
   },
   {
     name: "projects",
-    description: "Access and list software engineering projects",
+    description: "Access and list offensive security projects",
     execute: async (context) => {
-      const tasks = getMajorLayers("projects_metadata.json", "Downloading projects repository");
+      const tasks = getMajorLayers("projects_metadata.json", "Downloading security research projects");
       await runMultiDownload("Projects Repository", tasks, context);
 
       let output = "PROJECT DIRECTORY TREE:\nprojects/\n";
@@ -331,61 +331,67 @@ export const portfolioCommands: Command[] = [
   },
   {
     name: "blogs",
-    description: "Browse written developer articles",
+    description: "Browse written security research articles",
     execute: () => {
-      return "Access denied: HTTP 503 Service Unavailable. Blog database sector in write-lock state.";
+      return "Access denied: HTTP 503 Service Unavailable. Security write-ups database sector in write-lock state.";
     }
   },
   {
     name: "techstack",
-    description: "Review core technical software stack",
+    description: "Review core security testing and analysis toolkit",
     execute: () => {
       return [
         "===========================================================",
-        "PREFERRED SYSTEMS DEPLOYMENT ARCHITECTURE",
+        "PREFERRED SECURITY ASSESSMENT & RESEARCH TOOLKIT",
         "===========================================================",
-        "Languages:     TypeScript, Java, JavaScript, Python, Bash, SQL",
-        "Frameworks:    Next.js 15, React 19, Spring Boot, Express, Flask",
-        "Styling:       Tailwind CSS, Vanilla CSS, Styled Components",
-        "Databases:     PostgreSQL, MongoDB, MySQL, Redis, SQLite",
-        "Ops & Cloud:   Docker, AWS, GCP, Vercel, GitHub Actions, Linux",
+        "Testing & Recon:  Burp Suite, Nmap, Wireshark, OWASP ZAP, Metasploit",
+        "Vulnerability:   OWASP Top 10, SQLMap, Nikto, Gobuster, Hydra",
+        "Languages:        Python, Bash, Go, JavaScript, C, SQL",
+        "Environments:     Kali Linux, Parrot Security OS, Ubuntu Server, Docker Labs",
+        "Protocols & Sys:  TCP/IP, HTTP/S, DNS, SSH, Linux PrivEsc, Active Directory Basics",
         "==========================================================="
       ].join("\n");
     }
   },
   {
     name: "certificates",
-    description: "Print systems developer credentials list",
+    description: "Print systems security credentials and certifications status",
     execute: async (context) => {
-      const tasks = getMajorLayers("credentials_ledger.db", "Downloading verification certificates");
+      const tasks = getMajorLayers("credentials_ledger.db", "Synchronizing certificates ledger");
       await runMultiDownload("Certifications Hub", tasks, context);
 
       let output = "===========================================================\n";
-      PORTFOLIO_DATA.certifications.forEach((cert, index) => {
-        output += `[CREDENTIAL ${String(index + 1).padStart(2, "0")}] - ${cert.name}\n  Issuer: ${cert.issuer}\n  Resource URL: ${cert.ref}\n\n`;
-      });
+      output += "CERTIFICATION & CREDENTIALS LEDGER\n";
+      output += "===========================================================\n";
+      if (PORTFOLIO_DATA.certifications.length === 0) {
+        output += "No cybersecurity certificates logged.\nCertifications are currently in progress / unavailable.\n";
+      } else {
+        PORTFOLIO_DATA.certifications.forEach((cert, index) => {
+          output += `[CREDENTIAL ${String(index + 1).padStart(2, "0")}] - ${cert.name}\n  Issuer: ${cert.issuer}\n  Resource URL: ${cert.ref}\n\n`;
+        });
+      }
       output += "===========================================================";
       return output;
     }
   },
   {
     name: "achievements",
-    description: "List career highlights and awards",
+    description: "List security research milestones and achievements",
     execute: async (context) => {
-      const tasks = getMajorLayers("commendations_ledger.csv", "Downloading career achievements");
-      await runMultiDownload("Honors & Awards Node", tasks, context);
+      const tasks = getMajorLayers("commendations_ledger.csv", "Downloading security achievements");
+      await runMultiDownload("Honors & Milestones Node", tasks, context);
 
       let output = "===========================================================\n";
-      output += "- Key contributor to React-based open source static generation plugins\n";
-      output += "- Designed plant diagnosis Streamlit RAG agent layout\n";
-      output += "- Completed AWS and Cybersecurity simulated certifications\n";
+      output += "- Conducted vulnerability assessments across simulated enterprise architectures\n";
+      output += "- Researched automated web enumeration and recon workflows\n";
+      output += "- Solved complex CTF and penetration testing lab challenges\n";
       output += "===========================================================";
       return output;
     }
   },
   {
     name: "timeline",
-    description: "Unified historical timeline (academic & industry combined)",
+    description: "Unified historical timeline (academic & security research combined)",
     execute: () => {
       return [
         "===========================================================",
@@ -393,7 +399,7 @@ export const portfolioCommands: Command[] = [
         "===========================================================",
         "  [2004]         DOB         20.12.2004",
         "  [Department]   ENG-AI&ML   Artificial Intelligence & Machine Learning",
-        "  [Projects]     Plant Health RAG, Lumina Volt EV, 3D Web Showcases",
+        "  [Projects]     Recon Automation, Web Pentest Lab, Packet Analyzer",
         "==========================================================="
       ].join("\n");
     }

@@ -62,42 +62,42 @@ LinkedIn:    ${PORTFOLIO_DATA.contacts.linkedin}
               type: 'directory',
               name: 'skills',
               children: {
-                'frontend.txt': {
+                'web_security.txt': {
                   type: 'file',
-                  name: 'frontend.txt',
+                  name: 'web_security.txt',
                   content: `===========================================================
-FRONTEND PROFICIENCY MATRIX
+WEB APPLICATION SECURITY MATRIX
 ===========================================================
-React / Next.js    - Advanced (State management, SSR, Turbopack)
-Tailwind CSS       - Advanced (Responsive UI design)
-Vanilla CSS        - Advanced (Custom animation frames, Bezels)
-Three.js / WebGL   - Intermediate (3D animations, product displays)
-Figma / Blender    - Intermediate (UI prototyping & 3D modeling)
+OWASP Top 10       - Advanced (SQLi, XSS, CSRF, IDOR, SSRF)
+Burp Suite Pro     - Advanced (Target mapping, Repeater, Intruder, Extender)
+OWASP ZAP          - Intermediate (Automated vulnerability scanning)
+Authentication     - Advanced (JWT attacks, session hijacking, OAuth flaws)
+API Security       - Intermediate (REST/GraphQL endpoint testing)
 `
                 },
-                'backend.txt': {
+                'network_security.txt': {
                   type: 'file',
-                  name: 'backend.txt',
+                  name: 'network_security.txt',
                   content: `===========================================================
-BACKEND & PROGRAMMING LANGUAGES MATRIX
+NETWORK & SYSTEM SECURITY MATRIX
 ===========================================================
-Python / Flask     - Advanced (AI applications, RAG pipelines)
-JavaScript / Node  - Advanced (Full-stack APIs, systems engineering)
-Java / Spring Boot - Intermediate (Core object-oriented design)
-SQL / Databases    - Intermediate (MySQL, SQLite, MongoDB queries)
-C / C++            - Basic (Core systems logic)
+Recon & Discovery  - Advanced (Nmap, Masscan, DNS enumeration)
+Traffic Analysis   - Advanced (Wireshark, tcpdump, PCAP forensics)
+Exploitation       - Intermediate (Metasploit framework, custom exploits)
+Privilege Esc      - Intermediate (Linux/Windows enumeration & escalation)
+Wireless Security  - Basic (WPA2 handshakes, Aircrack-ng suite)
 `
                 },
                 'tools.txt': {
                   type: 'file',
                   name: 'tools.txt',
                   content: `===========================================================
-ENGINEERING UTILITIES & TOOLS
+OFFENSIVE SECURITY UTILITIES & AUTOMATION
 ===========================================================
-Version Control    - Git, GitHub Actions (CI/CD workflows)
-Cloud Platforms    - AWS, Google Cloud, Vercel deployments
-Containers         - Docker (Isolated system packaging)
-Shell Systems      - Linux bash, macOS zsh scripting
+Scripting & Tools  - Python, Bash, Go (Custom scanners, payload scripts)
+OS Environments    - Kali Linux, Parrot Security OS, Ubuntu Server
+Containers & Labs  - Docker (Vulnerable lab setups, CTF sandboxes)
+Version Control    - Git, GitHub (Security tooling repository management)
 `
                 }
               }
@@ -126,12 +126,13 @@ ${proj.description}
             'certificates': {
               type: 'directory',
               name: 'certificates',
-              children: PORTFOLIO_DATA.certifications.reduce((acc, cert) => {
-                const key = cert.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.pdf';
-                acc[key] = {
-                  type: 'file',
-                  name: key,
-                  content: `===========================================================
+              children: PORTFOLIO_DATA.certifications.length > 0 
+                ? PORTFOLIO_DATA.certifications.reduce((acc, cert) => {
+                    const key = cert.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.pdf';
+                    acc[key] = {
+                      type: 'file',
+                      name: key,
+                      content: `===========================================================
 VERIFIED CERTIFICATE DOCUMENT
 ===========================================================
 Certificate Name: ${cert.name}
@@ -139,9 +140,21 @@ Issuer:           ${cert.issuer}
 Verification Key: SHA256-${Math.random().toString(16).substring(2, 10).toUpperCase()}
 Credential URL:   ${cert.ref}
 `
-                };
-                return acc;
-              }, {} as { [key: string]: FSNode })
+                    };
+                    return acc;
+                  }, {} as { [key: string]: FSNode })
+                : {
+                    'notice.txt': {
+                      type: 'file',
+                      name: 'notice.txt',
+                      content: `===========================================================
+CERTIFICATE ARCHIVES STATUS
+===========================================================
+Status: No certificates currently logged.
+Certifications are currently in progress / unavailable.
+`
+                    }
+                  }
             },
             'experience': {
               type: 'directory',
@@ -215,15 +228,15 @@ You found the person behind this system.
 ===========================================================
           ██████       OS          : Charan OS v3.1
         ██████████     User        : Charan BS
-       ███      ███    Role        : AI & Full-Stack Developer
+       ███      ███    Role        : Offensive Security & Penetration Testing
        ███             Location    : Hassan, India
-       ███      ███    Languages   : Python, TypeScript, React, Java
-        ██████████     Frameworks  : Next.js 15, Streamlit, Flask, Three.js
+       ███      ███    Toolkit     : Burp Suite, Nmap, Wireshark, Metasploit
+        ██████████     Scripting   : Python, Bash, Go, Linux
           ██████       GitHub      : github.com/charanbs18
                        LinkedIn    : linkedin.com/in/charanbs666
 
 STORY:
-I am an Artificial Intelligence & Machine Learning engineering student with a deep passion for building interactive products, AI-powered tools, and 3D immersive graphics interfaces. This system represents my love for game design, operating systems, and core frontend craftsmanship.
+I am an Artificial Intelligence & Machine Learning engineering student with a dedicated focus on Offensive Security, Penetration Testing, and Vulnerability Research. This workstation reflects my commitment to security discovery, systems auditing, and ethical hacking.
 
 PORTFOLIO LINK:
 ${PORTFOLIO_DATA.contacts.portfolio}

@@ -282,10 +282,10 @@ DATA BREACH CODE: 0xDEADBEEF
       
       const manualPages: Record<string, string> = {
         help: `NAME\n    help - Display all available shell commands\n\nSYNOPSIS\n    help\n\nDESCRIPTION\n    Prints the complete menu layout detailing all interactive utilities and programs registered in the active DEV-OS.`,
-        who: `NAME\n    who - Display operator bio-card\n\nSYNOPSIS\n    who\n\nDESCRIPTION\n    Initiates a line-by-line render of the operator's neofetch logo alongside full developer specifications.`,
+        who: `NAME\n    who - Display operator bio-card\n\nSYNOPSIS\n    who\n\nDESCRIPTION\n    Initiates a line-by-line render of the operator's neofetch logo alongside full offensive security specifications.`,
         about: `NAME\n    about - Display operator bio-card\n\nSYNOPSIS\n    about\n\nDESCRIPTION\n    Alias for the 'who' command. Outputs operator details.`,
-        projects: `NAME\n    projects - View software engineering projects\n\nSYNOPSIS\n    projects\n\nDESCRIPTION\n    Fetches the metadata and directory layout of the developer's projects. Triggers multi-process downloading layers simulation.`,
-        certificates: `NAME\n    certificates - View academic certifications ledger\n\nSYNOPSIS\n    certificates\n\nDESCRIPTION\n    Searches and synchronizes the certificates database, printing credentials lists.`,
+        projects: `NAME\n    projects - View offensive security projects\n\nSYNOPSIS\n    projects\n\nDESCRIPTION\n    Fetches the metadata and directory layout of the security researcher's projects. Triggers multi-process downloading layers simulation.`,
+        certificates: `NAME\n    certificates - View security certifications ledger\n\nSYNOPSIS\n    certificates\n\nDESCRIPTION\n    Searches and synchronizes the certificates database, printing credentials ledger status.`,
         experience: `NAME\n    experience - View professional work experience timeline\n\nSYNOPSIS\n    experience\n\nDESCRIPTION\n    Pulls SQL timeline files and outputs historical milestones and company duties.`,
         education: `NAME\n    education - List academic background\n\nSYNOPSIS\n    education\n\nDESCRIPTION\n    Accesses educational transcript data files.`,
         secrets: `NAME\n    secrets - Security override index\n\nSYNOPSIS\n    secrets\n\nDESCRIPTION\n    Displays instruction layers for security breach algorithms. Backdoor access must be unlocked sequentially.`,
@@ -511,11 +511,11 @@ DATA BREACH CODE: 0xDEADBEEF
       return [
         "      \x1b[1;36m██████\x1b[0m       OS          : Charan OS v3.1",
         "    \x1b[1;36m██████████\x1b[0m     User        : Charan BS",
-        "   \x1b[1;36m███      ███\x1b[0m    Role        : AI & Full-Stack Developer",
+        "   \x1b[1;36m███      ███\x1b[0m    Role        : Offensive Security & Penetration Testing",
         "   \x1b[1;36m███\x1b[0m             Location    : Hassan, India",
-        "   \x1b[1;36m███      ███\x1b[0m    Languages   : Python, JavaScript, TypeScript, Java, C",
-        "    \x1b[1;36m██████████\x1b[0m     Frameworks  : React, Next.js, Streamlit, Express, Flask",
-        "      \x1b[1;36m██████\x1b[0m       Capabilities: RAG Apps, 3D UI, Data Systems"
+        "   \x1b[1;36m███      ███\x1b[0m    Focus       : Web App Security, Penetration Testing, Network Defense",
+        "    \x1b[1;36m██████████\x1b[0m     Toolkit     : Burp Suite, Nmap, Wireshark, Metasploit, Linux",
+        "      \x1b[1;36m██████\x1b[0m       Scripting   : Python, Bash, Go, Security Automation"
       ].join("\n");
     }
   },
