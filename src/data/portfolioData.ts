@@ -35,45 +35,36 @@ export const PORTFOLIO_DATA = {
   
   projects: [
     {
-      name: "Automated Recon & Vulnerability Suite",
-      slug: "vuln-recon-suite",
-      description: "A modular reconnaissance and vulnerability assessment toolkit designed for automated target enumeration, port discovery, HTTP service fingerprinting, and security misconfiguration detection.",
-      tech: ["Python", "Bash", "Nmap Scripting", "AsyncIO", "Socket Programming"],
-      role: "Security Researcher",
-      link: "https://github.com/charanbs18/recon-automation-toolkit"
+      name: "Chaining Vulnerabilities – TryHackMe",
+      slug: "chaining-vulnerabilities-tryhackme",
+      description: "Reproduced a multi-step attack chain in a controlled lab environment – starting from developer/test credentials, escalating to stored XSS in a user profile that executed in the administrator’s browser via an attacker-controlled script, and using the resulting authenticated session to change admin credentials and gain admin panel access. Demonstrated weak-credential usage, stored XSS, missing CSRF protection, and privilege escalation through vulnerability chaining.",
+      tech: ["TryHackMe", "Stored XSS", "CSRF", "Privilege Escalation", "Vulnerability Chaining"],
+      role: "Completed Room",
+      link: "#"
     },
     {
-      name: "Web Application Security Testing Lab",
-      slug: "web-pentest-lab",
-      description: "An interactive penetration testing environment focused on identifying and reproducing OWASP Top 10 vulnerabilities including SQL Injection, Cross-Site Scripting (XSS), IDOR, and broken authentication mechanisms.",
-      tech: ["Burp Suite", "OWASP ZAP", "Python", "Docker", "SQLMap"],
-      role: "Security Tester",
-      link: "https://github.com/charanbs18/web-pentest-lab"
+      name: "PortSwigger Web Security Academy Labs",
+      slug: "portswigger-web-security-academy-labs",
+      description: "Working through labs covering SQL Injection, XSS, authentication vulnerabilities, SSRF, path traversal, file upload vulnerabilities, CSRF, CORS, API testing, web cache deception, WebSockets, NoSQL injection, race conditions, GraphQL, prototype pollution, clickjacking, and web LLM attacks.",
+      tech: ["PortSwigger", "Web Security", "OWASP Top 10", "Vulnerability Research"],
+      role: "Actively Practicing",
+      link: "#"
     },
     {
-      name: "Network Traffic & Packet Analyzer",
-      slug: "network-packet-analyzer",
-      description: "A lightweight raw socket packet sniffer and security telemetry analyzer built to capture, inspect, and dissect TCP/UDP streams for anomalous payloads and protocol abuse.",
-      tech: ["Go", "Wireshark", "PCAP Analysis", "Raw Sockets", "TCP/IP"],
-      role: "Security Analyst",
-      link: "https://github.com/charanbs18/packet-sniffer-go"
+      name: "EV Charging Station Application",
+      slug: "ev-charging-station-application",
+      description: "Multi-role app with admin, operator, payment, helpline, and SOC-related functionality; planned as a future controlled security-testing target.",
+      tech: ["Web Security", "SOC Functionality", "Access Control", "Security Testing Target"],
+      role: "Personal Project",
+      link: "#"
     },
     {
-      name: "Offensive Security Research & CTF Labs",
-      slug: "ctf-exploit-lab",
-      description: "A curated repository of capture-the-flag challenge writeups, custom privilege escalation scripts, payload generation techniques, and binary vulnerability analysis notes.",
-      tech: ["Linux", "Metasploit", "GDB", "Bash Scripting", "Privilege Escalation"],
-      role: "Security Researcher",
-      link: "https://github.com/charanbs18/security-research-ctf"
-    },
-    {
-      name: "Secret Project █████",
-      slug: "secret-project",
-      description: "SYSTEM ERROR: ENCRYPTED PROFILE. SECURE ACCESS OVERRIDE INITIATED. UNLOCK THE CONSOLE VIA SECURITY GATE PROTOCOLS.",
-      tech: ["???", "???"],
-      role: "Anomalous Subject",
-      link: "#",
-      secret: true
+      name: "NetGuard AI — Real-Time WiFi Monitor",
+      slug: "netguard-ai-wifi-monitor",
+      description: "Python-based WiFi monitoring tool with real-time device discovery, network scanning, EvilTwin/FakeAP detection, and AI-based per-device threat scoring; built with Scapy, WebSockets, and native Windows WiFi support.",
+      tech: ["Python", "Scapy", "WebSockets", "EvilTwin Detection", "Network Scanning", "WiFi Security"],
+      role: "Personal Project",
+      link: "#"
     }
   ] as Project[],
 
