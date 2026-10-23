@@ -7,9 +7,9 @@ const DesktopContainer = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-screen h-screen bg-[#020610] flex flex-col items-center justify-center font-mono text-cyan-400 gap-4">
-        <div className="w-12 h-12 border-2 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin shadow-[0_0_15px_#00f0ff]" />
-        <span className="text-xs uppercase tracking-widest animate-pulse font-bold">
+      <div className="w-screen h-screen bg-black flex flex-col items-center justify-center font-mono text-white gap-4">
+        <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        <span className="text-[11px] uppercase tracking-widest text-zinc-400 font-bold">
           INITIALIZING eDEX-UI TERMINAL SYSTEM...
         </span>
       </div>

@@ -1,59 +1,40 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Terminal, Activity, Cpu, Wifi } from "lucide-react";
+import { useAudio } from "@/hooks/useAudio";
 
 interface EDexKeyboardDeckProps {
   onKeyPress?: (key: string) => void;
   onExecuteCommand?: (cmd: string) => void;
   className?: string;
-  themeColor?: string;
 }
 
 export function EDexKeyboardDeck({
   onKeyPress,
   onExecuteCommand,
   className = "",
-  themeColor = "cyan"
 }: EDexKeyboardDeckProps) {
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
-  const [lastKeyPressed, setLastKeyPressed] = useState<string>("READY");
-
-  // Simulated CPU micro telemetry for flanking bars
-  const [cpuLoads, setCpuLoads] = useState([28, 42, 19, 64]);
-  const [netRx, setNetRx] = useState(1.4);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCpuLoads([
-        Math.floor(15 + Math.random() * 55),
-        Math.floor(20 + Math.random() * 60),
-        Math.floor(10 + Math.random() * 50),
-        Math.floor(30 + Math.random() * 65),
-      ]);
-      setNetRx(parseFloat((1.1 + Math.random() * 2.2).toFixed(2)));
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
+  const { playClick, playBeep } = useAudio();
 
   // Listen to physical keyboard events
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const code = e.code.toUpperCase();
       const key = e.key.toUpperCase();
-      setPressedKeys(prev => {
+      setPressedKeys((prev) => {
         const next = new Set(prev);
         next.add(code);
         next.add(key);
         return next;
       });
-      setLastKeyPressed(e.key.length === 1 ? e.key.toUpperCase() : e.code);
+      playClick();
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
       const code = e.code.toUpperCase();
       const key = e.key.toUpperCase();
-      setPressedKeys(prev => {
+      setPressedKeys((prev) => {
         const next = new Set(prev);
         next.delete(code);
         next.delete(key);
@@ -67,44 +48,47 @@ export function EDexKeyboardDeck({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, []);
+  }, [playClick]);
 
-  const handleKeyClick = useCallback((label: string, value: string, isCommand = false) => {
-    setLastKeyPressed(label);
-    
-    // Quick visual flash
-    setPressedKeys(prev => new Set(prev).add(label.toUpperCase()));
-    setTimeout(() => {
-      setPressedKeys(prev => {
-        const next = new Set(prev);
-        next.delete(label.toUpperCase());
-        return next;
-      });
-    }, 150);
+  const handleKeyClick = useCallback(
+    (label: string, value: string, isCommand = false) => {
+      playClick();
 
-    if (isCommand) {
-      if (onExecuteCommand) {
-        onExecuteCommand(value);
+      // Quick visual flash
+      setPressedKeys((prev) => new Set(prev).add(label.toUpperCase()));
+      setTimeout(() => {
+        setPressedKeys((prev) => {
+          const next = new Set(prev);
+          next.delete(label.toUpperCase());
+          return next;
+        });
+      }, 120);
+
+      if (isCommand) {
+        if (onExecuteCommand) {
+          onExecuteCommand(value);
+        } else if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("edex-command", {
+              detail: { command: value },
+            })
+          );
+        }
+        return;
+      }
+
+      if (onKeyPress) {
+        onKeyPress(value);
       } else if (typeof window !== "undefined") {
         window.dispatchEvent(
-          new CustomEvent("edex-command", {
-            detail: { command: value }
+          new CustomEvent("edex-key", {
+            detail: { key: value },
           })
         );
       }
-      return;
-    }
-
-    if (onKeyPress) {
-      onKeyPress(value);
-    } else if (typeof window !== "undefined") {
-      window.dispatchEvent(
-        new CustomEvent("edex-key", {
-          detail: { key: value }
-        })
-      );
-    }
-  }, [onKeyPress, onExecuteCommand]);
+    },
+    [onKeyPress, onExecuteCommand, playClick]
+  );
 
   const isPressed = (keyId: string) => pressedKeys.has(keyId.toUpperCase());
 
@@ -113,15 +97,17 @@ export function EDexKeyboardDeck({
     { label: "ABOUT", cmd: "about" },
     { label: "PROJECTS", cmd: "projects" },
     { label: "SKILLS", cmd: "skills" },
-    { label: "EXP", cmd: "experience" },
+    { label: "EXPERIENCE", cmd: "experience" },
+    { label: "CERTIFICATES", cmd: "certificates" },
     { label: "CONTACT", cmd: "contact" },
     { label: "WHOAMI", cmd: "whoami" },
     { label: "CLEAR", cmd: "clear" },
     { label: "MATRIX", cmd: "matrix" },
   ];
 
+  // Authentic eDEX-UI Keyboard rows matching reference 1 & 3
   const row1 = [
-    { label: "`", val: "`", code: "Backquote" },
+    { label: "ESC", val: "Escape", code: "Escape", width: "col-span-1" },
     { label: "1", val: "1", code: "Digit1" },
     { label: "2", val: "2", code: "Digit2" },
     { label: "3", val: "3", code: "Digit3" },
@@ -134,7 +120,7 @@ export function EDexKeyboardDeck({
     { label: "0", val: "0", code: "Digit0" },
     { label: "-", val: "-", code: "Minus" },
     { label: "=", val: "=", code: "Equal" },
-    { label: "BKSP", val: "BACKSPACE", code: "Backspace", width: "col-span-2" },
+    { label: "BACK", val: "BACKSPACE", code: "Backspace", width: "col-span-2" },
   ];
 
   const row2 = [
@@ -167,7 +153,7 @@ export function EDexKeyboardDeck({
     { label: "L", val: "l", code: "KeyL" },
     { label: ";", val: ";", code: "Semicolon" },
     { label: "'", val: "'", code: "Quote" },
-    { label: "ENTER", val: "ENTER", code: "Enter", width: "col-span-2", isAccent: true },
+    { label: "ENTER", val: "ENTER", code: "Enter", width: "col-span-2" },
   ];
 
   const row4 = [
@@ -182,19 +168,19 @@ export function EDexKeyboardDeck({
     { label: ",", val: ",", code: "Comma" },
     { label: ".", val: ".", code: "Period" },
     { label: "/", val: "/", code: "Slash" },
-    { label: "▲", val: "ArrowUp", code: "ArrowUp" },
     { label: "SHIFT", val: "SHIFT", code: "ShiftRight", width: "col-span-2" },
+    { label: "▲", val: "ArrowUp", code: "ArrowUp" },
   ];
 
   const row5 = [
-    { label: "CTRL", val: "CTRL", code: "ControlLeft" },
-    { label: "ALT", val: "ALT", code: "AltLeft" },
+    { label: "CTRL", val: "CTRL", code: "ControlLeft", width: "col-span-2" },
+    { label: "FN", val: "FN", code: "Fn" },
     { label: "SPACE", val: " ", code: "Space", width: "col-span-7" },
-    { label: "ALT", val: "ALT", code: "AltRight" },
+    { label: "ALT GR", val: "ALT", code: "AltRight", width: "col-span-2" },
+    { label: "CTRL", val: "CTRL", code: "ControlRight" },
     { label: "◄", val: "ArrowLeft", code: "ArrowLeft" },
     { label: "▼", val: "ArrowDown", code: "ArrowDown" },
     { label: "►", val: "ArrowRight", code: "ArrowRight" },
-    { label: "RUN", val: "ENTER", code: "Enter", width: "col-span-2", isAction: true },
   ];
 
   return (
@@ -205,178 +191,95 @@ export function EDexKeyboardDeck({
       <span className="edex-bracket-bl" />
       <span className="edex-bracket-br" />
 
-      {/* Header telemetry strip */}
-      <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1 flex items-center justify-between text-[10px] shrink-0">
-        <div className="flex items-center space-x-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_4px_#00f0ff]" />
-          <span className="font-bold tracking-widest text-cyan-200 uppercase">
-            [ VIRTUAL_KEYBOARD // HARDWARE_HUD ]
-          </span>
-        </div>
-        <div className="flex items-center space-x-3 text-[9px] text-cyan-400/80">
-          <span className="hidden sm:inline">KEY_BUFFER: <strong className="text-cyan-200">{lastKeyPressed}</strong></span>
-          <span className="text-zinc-600">|</span>
-          <span className="flex items-center gap-1 text-emerald-400">
-            <Activity className="w-3 h-3" /> ONLINE
-          </span>
-        </div>
-      </div>
-
-      {/* Main Body: Flanking Telemetry + Center Keyboard Grid */}
-      <div className="flex-1 p-2 flex gap-2 min-h-0 overflow-hidden">
-        {/* Left Telemetry Strip */}
-        <div className="hidden lg:flex flex-col justify-between w-28 shrink-0 bg-black/40 border border-cyan-500/15 p-1.5 rounded-xs text-[9px]">
-          <div>
-            <div className="flex items-center gap-1 text-cyan-400 font-bold mb-1">
-              <Cpu className="w-3 h-3" /> CORE ACTIVITY
-            </div>
-            <div className="space-y-1">
-              {cpuLoads.map((load, idx) => (
-                <div key={idx} className="space-y-0.5">
-                  <div className="flex justify-between text-[8px] text-zinc-400">
-                    <span>C{idx + 1}</span>
-                    <span className="text-cyan-300">{load}%</span>
-                  </div>
-                  <div className="h-1 bg-zinc-900 overflow-hidden rounded-xs border border-cyan-500/10">
-                    <div 
-                      className="h-full bg-cyan-400 transition-all duration-300"
-                      style={{ width: `${load}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="pt-1 border-t border-cyan-500/10 text-[8px] text-zinc-500 space-y-0.5">
-            <div>IRQ: ACTIVE</div>
-            <div>DMA: LOCKED</div>
-          </div>
+      {/* Main Keyboard Grid */}
+      <div className="flex-1 p-2 flex flex-col justify-between gap-1.5 min-h-0 overflow-hidden bg-black">
+        {/* Quick Command Chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto edex-scrollbar pb-1 shrink-0">
+          <span className="text-[9px] text-zinc-500 font-bold uppercase shrink-0 mr-1">// CMD:</span>
+          {quickCommands.map((q) => (
+            <button
+              key={q.cmd}
+              onClick={() => handleKeyClick(q.label, q.cmd, true)}
+              className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 hover:border-white/30 rounded-xs transition-colors shrink-0 cursor-pointer"
+            >
+              {q.label}
+            </button>
+          ))}
         </div>
 
-        {/* Center Keyboard Deck */}
-        <div className="flex-1 flex flex-col justify-between gap-1 min-w-0">
-          {/* Quick Command Action Chips */}
-          <div className="flex items-center gap-1 overflow-x-auto scrollbar-none pb-0.5">
-            <span className="text-[9px] text-cyan-400/60 font-bold uppercase shrink-0 mr-1">// CMD:</span>
-            {quickCommands.map((q) => (
-              <button
-                key={q.cmd}
-                onClick={() => handleKeyClick(q.label, q.cmd, true)}
-                className="px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-400 hover:text-white border border-cyan-500/30 hover:border-cyan-400 rounded-xs transition-all shrink-0 cursor-pointer active:scale-95"
-              >
-                [{q.label}]
-              </button>
-            ))}
-          </div>
-
-          {/* Row 1 */}
-          <div className="grid gap-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
-            {row1.map((k) => (
-              <button
-                key={k.code}
-                onClick={() => handleKeyClick(k.label, k.val)}
-                className={`edex-key h-6 ${k.width || "col-span-1"} ${
-                  isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
-                }`}
-              >
-                {k.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Row 2 */}
-          <div className="grid gap-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
-            {row2.map((k) => (
-              <button
-                key={k.code}
-                onClick={() => handleKeyClick(k.label, k.val)}
-                className={`edex-key h-6 ${k.width || "col-span-1"} ${
-                  isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
-                }`}
-              >
-                {k.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Row 3 */}
-          <div className="grid gap-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
-            {row3.map((k) => (
-              <button
-                key={k.code}
-                onClick={() => handleKeyClick(k.label, k.val)}
-                className={`edex-key h-6 ${k.width || "col-span-1"} ${
-                  k.isAccent ? "edex-key-accent" : ""
-                } ${isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""}`}
-              >
-                {k.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Row 4 */}
-          <div className="grid gap-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
-            {row4.map((k) => (
-              <button
-                key={k.code}
-                onClick={() => handleKeyClick(k.label, k.val)}
-                className={`edex-key h-6 ${k.width || "col-span-1"} ${
-                  isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
-                }`}
-              >
-                {k.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Row 5 */}
-          <div className="grid gap-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
-            {row5.map((k) => (
-              <button
-                key={k.code}
-                onClick={() => handleKeyClick(k.label, k.val)}
-                className={`edex-key h-6 ${k.width || "col-span-1"} ${
-                  k.isAction ? "edex-key-action font-bold !text-cyan-300" : ""
-                } ${isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""}`}
-              >
-                {k.label}
-              </button>
-            ))}
-          </div>
+        {/* Row 1 */}
+        <div className="grid gap-1 flex-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
+          {row1.map((k) => (
+            <button
+              key={k.code}
+              onClick={() => handleKeyClick(k.label, k.val)}
+              className={`edex-key h-full ${k.width || "col-span-1"} ${
+                isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
+              }`}
+            >
+              {k.label}
+            </button>
+          ))}
         </div>
 
-        {/* Right Telemetry Strip */}
-        <div className="hidden lg:flex flex-col justify-between w-28 shrink-0 bg-black/40 border border-cyan-500/15 p-1.5 rounded-xs text-[9px]">
-          <div>
-            <div className="flex items-center gap-1 text-cyan-400 font-bold mb-1">
-              <Wifi className="w-3 h-3" /> UPLINK // I/O
-            </div>
-            <div className="space-y-1">
-              <div className="flex justify-between text-[8px] text-zinc-400">
-                <span>RX RATE</span>
-                <span className="text-cyan-300">{netRx} MB/s</span>
-              </div>
-              <div className="h-1 bg-zinc-900 overflow-hidden rounded-xs border border-cyan-500/10">
-                <div 
-                  className="h-full bg-emerald-400 transition-all duration-300"
-                  style={{ width: `${Math.min(100, netRx * 35)}%` }}
-                />
-              </div>
+        {/* Row 2 */}
+        <div className="grid gap-1 flex-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
+          {row2.map((k) => (
+            <button
+              key={k.code}
+              onClick={() => handleKeyClick(k.label, k.val)}
+              className={`edex-key h-full ${k.width || "col-span-1"} ${
+                isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
+              }`}
+            >
+              {k.label}
+            </button>
+          ))}
+        </div>
 
-              <div className="flex justify-between text-[8px] text-zinc-400 pt-1">
-                <span>LATENCY</span>
-                <span className="text-emerald-400">12ms</span>
-              </div>
-              <div className="flex justify-between text-[8px] text-zinc-400">
-                <span>SECURITY</span>
-                <span className="text-cyan-400">AES-256</span>
-              </div>
-            </div>
-          </div>
-          <div className="pt-1 border-t border-cyan-500/10 text-[8px] text-zinc-500 space-y-0.5">
-            <div>PACKETS: VERIFIED</div>
-            <div>STATUS: ENCRYPTED</div>
-          </div>
+        {/* Row 3 */}
+        <div className="grid gap-1 flex-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
+          {row3.map((k) => (
+            <button
+              key={k.code}
+              onClick={() => handleKeyClick(k.label, k.val)}
+              className={`edex-key h-full ${k.width || "col-span-1"} ${
+                isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
+              }`}
+            >
+              {k.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Row 4 */}
+        <div className="grid gap-1 flex-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
+          {row4.map((k) => (
+            <button
+              key={k.code}
+              onClick={() => handleKeyClick(k.label, k.val)}
+              className={`edex-key h-full ${k.width || "col-span-1"} ${
+                isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
+              }`}
+            >
+              {k.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Row 5 */}
+        <div className="grid gap-1 flex-1" style={{ gridTemplateColumns: "repeat(15, minmax(0, 1fr))" }}>
+          {row5.map((k, i) => (
+            <button
+              key={`${k.code}-${i}`}
+              onClick={() => handleKeyClick(k.label, k.val)}
+              className={`edex-key h-full ${k.width || "col-span-1"} ${
+                isPressed(k.code) || isPressed(k.label) ? "is-pressed" : ""
+              }`}
+            >
+              {k.label}
+            </button>
+          ))}
         </div>
       </div>
     </div>

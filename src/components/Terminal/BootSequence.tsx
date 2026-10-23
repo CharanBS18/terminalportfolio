@@ -74,32 +74,32 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
   }, []);
 
   return (
-    <div className="font-mono text-sm leading-relaxed p-4 select-none min-h-screen flex flex-col justify-center items-center edex-grid-bg">
-      <div className="edex-panel p-6 max-w-2xl w-full border border-cyan-500/35 shadow-[0_0_30px_rgba(0,240,255,0.15)] relative">
+    <div className="font-mono text-sm leading-relaxed p-4 select-none min-h-screen flex flex-col justify-center items-center bg-black">
+      <div className="edex-panel p-6 max-w-2xl w-full border border-white/20 shadow-[0_0_30px_rgba(0,0,0,0.8)] relative bg-black">
         <span className="edex-bracket-tl" />
         <span className="edex-bracket-tr" />
         <span className="edex-bracket-bl" />
         <span className="edex-bracket-br" />
 
-        <div className="flex items-center justify-between pb-2 mb-3 border-b border-cyan-500/20 text-[10px]">
-          <span className="font-bold tracking-widest text-cyan-300 flex items-center gap-1.5 uppercase">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_6px_#00f0ff]" />
+        <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/10 text-[10px]">
+          <span className="font-bold tracking-widest text-zinc-300 flex items-center gap-1.5 uppercase">
+            <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
             [ SYSTEM_INITIALIZATION // DIAGNOSTIC_BOOT ]
           </span>
-          <span className="text-cyan-400/70">ARCH: x86_64</span>
+          <span className="text-zinc-500">ARCH: x86_64</span>
         </div>
 
         <div className="space-y-1.5 max-h-[380px] overflow-hidden">
           {logs.map((log, idx) => {
-            let styleClass = "text-cyan-100 opacity-90";
+            let styleClass = "text-zinc-300 opacity-90";
             if (log.startsWith("WARNING") || log.includes("BLOCK")) {
-              styleClass = "text-red-400 font-bold animate-pulse drop-shadow-[0_0_8px_rgba(248,113,113,0.4)]";
+              styleClass = "text-red-400 font-bold";
             } else if (log.includes("[OK]") || log.includes("(Success)")) {
-              styleClass = "text-emerald-400 font-bold drop-shadow-[0_0_8px_rgba(52,211,153,0.35)]";
+              styleClass = "text-emerald-400 font-bold";
             } else if (log.includes("Operator") || log.includes("eDEX-UI")) {
-              styleClass = "text-cyan-300 font-bold drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]";
+              styleClass = "text-white font-bold";
             } else if (log.includes("Level-5") || log.includes("SECURED")) {
-              styleClass = "text-sky-300 font-bold";
+              styleClass = "text-zinc-200 font-semibold";
             }
 
             return (
@@ -109,7 +109,7 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
             );
           })}
           {logs.length < bootLines.length && (
-            <div className="text-cyan-400 animate-pulse inline-block ml-1">
+            <div className="text-white animate-pulse inline-block ml-1">
               █
             </div>
           )}

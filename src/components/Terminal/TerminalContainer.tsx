@@ -272,98 +272,86 @@ export function TerminalContainer({
           </div>
         </div>
       ) : (
-        /* eDEX-UI High-Tech HUD Terminal Header */
+        /* eDEX-UI High-Tech HUD Terminal Header matching reference 1 & 3 */
         <div 
           onPointerDown={(e) => {
             const target = e.target as HTMLElement;
             if (target.closest("button") || target.closest("input")) return;
             onHeaderPointerDown?.(e);
           }}
-          className={`px-3 py-2 flex items-center justify-between border-b select-none shrink-0 font-mono cursor-grab active:cursor-grabbing ${
+          className={`px-3 py-1.5 flex items-center justify-between border-b select-none shrink-0 font-mono text-[10px] ${
             dimension === "2099" 
               ? "bg-red-950/90 text-red-500 border-b-red-500/30" 
-              : "bg-[#040e1f]/95 text-cyan-200 border-b-cyan-500/25"
+              : "bg-[#0e0e13] text-zinc-300 border-b-white/10"
           }`}
         >
-          <div className="flex items-center gap-2 cursor-default min-w-0">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_6px_#00f0ff] shrink-0" />
-            <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-cyan-100 uppercase truncate">
-              [ TTY-01 // CHARAN_SHELL ]
+          {/* Left Title */}
+          <span className="font-bold tracking-wider text-zinc-400 uppercase">
+            TERMINAL
+          </span>
+
+          {/* Center Tabs */}
+          <div className="flex items-center space-x-1">
+            <span className="px-2 py-0.5 bg-white/10 border border-white/20 text-white font-bold rounded-xs tracking-wide">
+              MAIN - zsh
             </span>
-            <span className="hidden md:inline text-[9px] text-cyan-400/70 border-l border-cyan-500/20 pl-2">
-              {username}@{hostname}
+            <span className="hidden sm:inline px-2 py-0.5 text-zinc-600 tracking-wider">
+              EMPTY
+            </span>
+            <span className="hidden md:inline px-2 py-0.5 text-zinc-600 tracking-wider">
+              EMPTY
+            </span>
+            <span className="hidden lg:inline px-2 py-0.5 text-zinc-600 tracking-wider">
+              EMPTY
+            </span>
+            <span className="hidden xl:inline px-2 py-0.5 text-zinc-600 tracking-wider">
+              EMPTY
             </span>
           </div>
 
-          <div className="hidden lg:flex items-center gap-2 px-2 py-0.5 rounded-xs bg-cyan-950/40 border border-cyan-500/20 text-[9px] text-cyan-300 tracking-wider">
-            <span>LINK: SECURE</span>
-            <span className="text-zinc-600">//</span>
-            <span>PORT: 22</span>
-            <span className="text-zinc-600">//</span>
-            <span>ENCRYPT: AES-256</span>
-          </div>
-
+          {/* Right Shell Tag & Actions */}
           <div className="flex items-center space-x-2 shrink-0">
-            <span className="hidden sm:inline bg-cyan-950/40 px-2 py-0.5 rounded-xs border border-cyan-500/30 text-cyan-300 uppercase tracking-widest text-[9px] font-bold">
-              [{theme}]
+            <span className="hidden sm:inline text-zinc-500 tracking-wider uppercase text-[9px]">
+              MAIN SHELL
             </span>
 
-            {/* Audio Toggle */}
+            {/* Clear Button */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                toggleMute();
-                playBeep(isMuted ? 880 : 440, 0.05);
+                playBeep(440, 0.05);
+                triggerClear();
               }}
-              className="text-cyan-400/80 hover:text-cyan-100 hover:bg-cyan-500/20 border border-cyan-500/20 hover:border-cyan-400/60 p-1 rounded-xs transition-colors cursor-pointer"
-              title={isMuted ? "Unmute audio" : "Mute audio"}
+              className="px-1.5 py-0.5 text-[8px] font-mono text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xs transition-colors cursor-pointer"
+              title="Clear terminal buffer"
             >
-              {isMuted ? (
-                <VolumeX className="w-3.5 h-3.5 text-red-400 drop-shadow-[0_0_4px_rgba(248,113,113,0.3)]" />
-              ) : (
-                <Volume2 className="w-3.5 h-3.5 text-cyan-400 drop-shadow-[0_0_4px_rgba(0,240,255,0.4)]" />
-              )}
+              CLEAR
             </button>
-
-            {/* eDEX Terminal Action Controls */}
-            <div className="flex items-center space-x-1 pl-1 border-l border-cyan-500/20">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  playBeep(440, 0.05);
-                  triggerClear();
-                }}
-                className="px-1.5 py-0.5 text-[8px] font-mono text-cyan-400/80 hover:text-cyan-100 border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 rounded-xs transition-colors cursor-pointer"
-                title="Clear terminal buffer"
-              >
-                CLEAR
-              </button>
-            </div>
           </div>
         </div>
       )}
 
-      {/* Scrollable Viewport */}
-      <section className="flex-1 overflow-y-auto p-4 pr-3 edex-scrollbar select-text min-h-0 bg-[#020713]/90">
+      {/* Scrollable Viewport - Pure Black eDEX background */}
+      <section className="flex-1 overflow-y-auto p-4 pr-3 edex-scrollbar select-text min-h-0 bg-black text-[#e4e4e7]">
         <div className="w-full">
           {/* eDEX-UI Welcome Header Card */}
-          <div className="mb-5 font-mono text-xs leading-relaxed select-none border border-cyan-500/25 bg-cyan-950/20 p-3 rounded-xs relative">
+          <div className="mb-5 font-mono text-xs leading-relaxed select-none border border-white/10 bg-zinc-950/80 p-3 rounded-xs relative">
             <span className="edex-bracket-tl" />
             <span className="edex-bracket-br" />
-            <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-cyan-500/20 text-[10px]">
-              <span className="text-cyan-300 font-bold tracking-widest uppercase flex items-center gap-1.5">
+            <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-white/10 text-[10px]">
+              <span className="text-zinc-200 font-bold tracking-widest uppercase flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                eDEX-UI // SECURE SHELL v3.1 [HOST: PORTFOLIO]
+                eDEX-UI // SECURE SHELL [HOST: PORTFOLIO]
               </span>
-              <span className="text-cyan-400/70 hidden sm:inline">AUTH: LEVEL-5 ROOT // SESSION: TTY-1</span>
+              <span className="text-zinc-500 hidden sm:inline">AUTH: LEVEL-5 ROOT // SESSION: TTY-1</span>
             </div>
-            <p className="text-cyan-100 font-bold drop-shadow-[0_0_8px_rgba(0,240,255,0.4)] text-sm mb-1">
+            <p className="text-white font-bold text-sm mb-1">
               CHARAN B S — OFFENSIVE SECURITY & PENETRATION TESTING
             </p>
-            <p className="text-cyan-300/90 text-xs">
-              Type <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">help</span> to scan available instructions, or run <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">projects</span>, <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">skills</span>, <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">contact</span>.
+            <p className="text-zinc-400 text-xs">
+              Type <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">help</span> to scan available instructions, or run <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">projects</span>, <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">skills</span>, <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">contact</span>.
             </p>
-            <div className="flex items-center justify-between text-[10px] text-cyan-400/60 mt-2 pt-1 border-t border-cyan-500/10">
+            <div className="flex items-center justify-between text-[9px] text-zinc-500 pt-1.5 mt-2 border-t border-white/5">
               <span>LINK: SECURE [AES-256]</span>
               <span>SHELL HIST: {commandHistoryCount} COMMANDS</span>
             </div>

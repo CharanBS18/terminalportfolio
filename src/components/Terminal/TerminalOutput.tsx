@@ -35,7 +35,7 @@ function NeofetchRenderer() {
   return (
     <div className="flex flex-col lg:flex-row lg:space-x-8 items-start py-2 select-text font-mono text-sm leading-relaxed max-w-full overflow-hidden">
       {/* Left Side: Animated ASCII logo */}
-      <pre className="text-cyan-400 font-bold drop-shadow-[0_0_8px_rgba(34,211,238,0.3)] animate-pulse shrink-0 overflow-x-auto text-[10px] sm:text-xs leading-tight">
+      <pre className="text-white font-bold shrink-0 overflow-x-auto text-[10px] sm:text-xs leading-tight">
         {asciiLines.slice(0, visibleLines).join("\n")}
       </pre>
 
@@ -151,10 +151,10 @@ export function TerminalOutput({ history }: TerminalOutputProps) {
                 <span className="text-[var(--term-fg)] font-bold">
                   {username}@{hostname}
                 </span>
-                <span className="text-[var(--term-dim)]">:</span>
-                <span className="text-cyan-400 font-bold">{item.dir || "~"}</span>
-                <span className="text-[var(--term-fg)] font-bold">$</span>
-                <span className="text-[var(--term-fg)] ml-1 font-semibold">{item.command}</span>
+                <span className="text-zinc-500">:</span>
+                <span className="text-zinc-300 font-bold">{item.dir || "~"}</span>
+                <span className="text-white font-bold">$</span>
+                <span className="text-white ml-1 font-semibold">{item.command}</span>
               </div>
             );
           })()}
