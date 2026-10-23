@@ -33,7 +33,7 @@ export function useTerminal(options?: UseTerminalOptions) {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [currentPath, setCurrentPath] = useState<string[]>(["home", "charan"]);
   const [theme, setTheme] = useState("cyan");
-  const [dimension, setDimension] = useState("2026");
+  const [dimension, setDimension] = useState("edex");
   const [isMelting, setIsMelting] = useState(false);
   const [isTornadoActive, setIsTornadoActive] = useState(false);
   const [isSandboxActive, setIsSandboxActive] = useState(false);

@@ -196,7 +196,7 @@ export function TerminalContainer({
       <div className="scanlines z-10 pointer-events-none" />
       
       {/* eDEX-UI Corner Brackets */}
-      {dimension !== "1984" && dimension !== "1995" && (
+      {dimension === "edex" && (
         <>
           <span className="edex-bracket-tl" />
           <span className="edex-bracket-tr" />
@@ -271,7 +271,7 @@ export function TerminalContainer({
             Terminal
           </div>
         </div>
-      ) : (
+      ) : dimension === "edex" ? (
         /* eDEX-UI High-Tech HUD Terminal Header matching reference 1 & 3 */
         <div 
           onPointerDown={(e) => {
@@ -279,11 +279,7 @@ export function TerminalContainer({
             if (target.closest("button") || target.closest("input")) return;
             onHeaderPointerDown?.(e);
           }}
-          className={`px-3 py-1.5 flex items-center justify-between border-b select-none shrink-0 font-mono text-[10px] ${
-            dimension === "2099" 
-              ? "bg-red-950/90 text-red-500 border-b-red-500/30" 
-              : "bg-[#0e0e13] text-zinc-300 border-b-white/10"
-          }`}
+          className="px-3 py-1.5 flex items-center justify-between border-b select-none shrink-0 font-mono text-[10px] bg-[#0e0e13] text-zinc-300 border-b-white/10"
         >
           {/* Left Title */}
           <span className="font-bold tracking-wider text-zinc-400 uppercase">
@@ -326,6 +322,61 @@ export function TerminalContainer({
               title="Clear terminal buffer"
             >
               CLEAR
+            </button>
+          </div>
+        </div>
+      ) : (
+        /* Default macOS style header (for 2026, 2099, and classic modes) */
+        <div 
+          onPointerDown={(e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest("button") || target.closest("input")) return;
+            onHeaderPointerDown?.(e);
+          }}
+          className={`px-4 py-3 flex items-center justify-between border-b select-none shrink-0 font-sans cursor-grab active:cursor-grabbing ${
+            dimension === "2099" 
+              ? "bg-red-950/90 text-red-500 border-b-red-500/20" 
+              : "bg-[#18181b]/95 text-zinc-300 border-b-white/5"
+          }`}
+        >
+          <div className="flex-1 flex items-center gap-2 cursor-default">
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={(e) => { e.stopPropagation(); playBeep(220, 0.1, false); onClose?.(); }}
+                className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] flex items-center justify-center text-[7px] text-red-900/60 font-bold hover:after:content-['✕'] active:opacity-85 cursor-pointer"
+              />
+              <button 
+                onClick={(e) => { e.stopPropagation(); playBeep(330, 0.1, false); onMinimize?.(); }}
+                className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] flex items-center justify-center text-[7px] text-yellow-900/60 font-bold hover:after:content-['─'] active:opacity-85 cursor-pointer"
+              />
+              <button 
+                onClick={(e) => { e.stopPropagation(); playBeep(440, 0.1, false); onMaximize?.(); }}
+                className="w-3.5 h-3.5 rounded-full bg-[#27c93f] flex items-center justify-center text-[7px] text-green-900/60 font-bold hover:after:content-['⤢'] active:opacity-85 cursor-pointer"
+              />
+            </div>
+          </div>
+          <span className="text-xs font-medium select-none flex items-center">
+            <Terminal className="w-3.5 h-3.5 text-zinc-500 mr-2" />
+            Terminal — {username}@{hostname}
+          </span>
+          <div className="flex items-center space-x-3">
+            <span className="hidden sm:inline bg-zinc-800/50 px-2 py-0.5 rounded border border-zinc-700 text-zinc-400 uppercase tracking-widest text-[9px]">
+              {theme} mode
+            </span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMute();
+                playBeep(isMuted ? 880 : 440, 0.05);
+              }}
+              className="text-zinc-400 hover:text-white transition-colors p-1 rounded hover:bg-zinc-800 cursor-pointer"
+              title={isMuted ? "Unmute audio" : "Mute audio"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-4 h-4 text-red-400 drop-shadow-[0_0_4px_rgba(248,113,113,0.3)]" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-[var(--term-fg)] drop-shadow-[0_0_4px_var(--term-glow)]" />
+              )}
             </button>
           </div>
         </div>

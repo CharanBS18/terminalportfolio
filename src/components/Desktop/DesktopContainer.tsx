@@ -8,12 +8,13 @@ import { EDexFilesystemPanel } from "../dashboard/EDexFilesystemPanel";
 import { EDexNetworkPanel } from "../dashboard/EDexNetworkPanel";
 import { MeltdownEffect } from "../Effects/MeltdownEffect";
 import { FutureEnvironment2099 } from "./FutureEnvironment2099";
+import { ClassicDesktopContainer } from "./ClassicDesktopContainer";
 import { useAudio } from "@/hooks/useAudio";
 import { Terminal, Activity, Folder, Globe } from "lucide-react";
 
 export function DesktopContainer() {
   const [workspaceTheme, setWorkspaceTheme] = useState("blade");
-  const [dimension, setDimension] = useState("2026");
+  const [dimension, setDimension] = useState("edex");
   const [isMelting, setIsMelting] = useState(false);
   const [isTornadoActive, setIsTornadoActive] = useState(false);
   const [isSandboxActive, setIsSandboxActive] = useState(false);
@@ -93,6 +94,16 @@ export function DesktopContainer() {
   // Render 2099 Cyberpunk Future overlay if triggered
   if (dimension === "2099") {
     return <FutureEnvironment2099 isGlitching={false} />;
+  }
+
+  // Roll back to oldest/classic desktop design for computing dimensions (1984, 1995, 2026, etc.)
+  if (dimension !== "edex") {
+    return (
+      <ClassicDesktopContainer 
+        initialDimension={dimension} 
+        onDimensionChange={(dim) => setDimension(dim)} 
+      />
+    );
   }
 
   return (
