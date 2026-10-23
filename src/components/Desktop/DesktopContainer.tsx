@@ -92,7 +92,7 @@ export function DesktopContainer() {
 
   // Render 2099 Cyberpunk Future overlay if triggered
   if (dimension === "2099") {
-    return <FutureEnvironment2099 />;
+    return <FutureEnvironment2099 isGlitching={false} />;
   }
 
   return (

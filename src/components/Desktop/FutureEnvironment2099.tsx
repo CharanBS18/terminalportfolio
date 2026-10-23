@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Cpu, Server, Activity, ShieldCheck, Radio } from "lucide-react";
 
-export function FutureEnvironment2099({ isGlitching }: { isGlitching: boolean }) {
+export function FutureEnvironment2099({ isGlitching = false }: { isGlitching?: boolean }) {
   const [timeText, setTimeText] = useState("");
   const [logs, setLogs] = useState<string[]>([
     "SYS_INIT: SECURE LINK SOLVED",
