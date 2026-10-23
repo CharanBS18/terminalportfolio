@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useTerminalEvent } from "@/hooks/useTerminalEvent";
 
 interface Node {
   x: number;
@@ -15,7 +16,6 @@ export function NetworkWidget({ themeColor = "cyan" }: { themeColor?: string }) 
   const [bandwidthHistory, setBandwidthHistory] = useState<number[]>(Array(30).fill(25));
   const [trafficRate, setTrafficRate] = useState(5.4);
   const packetStormRef = useRef(false);
-  const { useTerminalEvent } = require("@/hooks/useTerminalEvent");
 
   useTerminalEvent((detail: { command: string }) => {
     const { command } = detail;

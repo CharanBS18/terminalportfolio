@@ -1,22 +1,9 @@
 import type { Metadata } from "next";
-import { VT323, Share_Tech_Mono } from "next/font/google";
 import "./globals.css";
 
-const vt323 = VT323({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-vt323",
-});
-
-const shareTechMono = Share_Tech_Mono({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-share-tech",
-});
-
 export const metadata: Metadata = {
-  title: "DEV-OS v3.1 | Terminal Portfolio",
-  description: "An immersive terminal portfolio. Retro CRT monitor style, hidden hacking secrets, and mysterious filesystem.",
+  title: "eDEX-UI // Charan BS | Security Terminal Portfolio",
+  description: "An immersive eDEX-UI sci-fi terminal portfolio. Penetration testing, offensive security research, and interactive technical telemetry.",
 };
 
 export default function RootLayout({
@@ -27,9 +14,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${vt323.variable} ${shareTechMono.variable} h-full antialiased`}
+      className="h-full antialiased font-mono"
     >
-      <body className="min-h-full flex flex-col bg-[#090c05]">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet" />
+      </head>
+      <body className="min-h-full flex flex-col bg-[#020610]">
         {children}
       </body>
     </html>

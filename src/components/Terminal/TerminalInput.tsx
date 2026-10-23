@@ -60,15 +60,17 @@ export function TerminalInput({
   return (
     <div className="flex items-center space-x-1.5 font-mono text-sm leading-relaxed mt-2 select-none relative">
       {/* Prompt Prefix */}
-      <span className={`font-bold transition-colors duration-200 ${glitchPrompt ? 'text-red-500 animate-pulse' : 'text-[var(--term-fg)]'}`}>
+      <span className={`font-bold transition-colors duration-200 font-mono tracking-tight ${
+        glitchPrompt ? 'text-red-500 animate-pulse' : 'text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.35)]'
+      }`}>
         {username}@{hostname}
       </span>
-      <span className="text-[var(--term-dim)]">:</span>
-      <span className="text-cyan-400 font-bold transition-all">{dirStr}</span>
-      <span className="text-[var(--term-fg)] font-bold">$</span>
+      <span className="text-cyan-600/80">:</span>
+      <span className="text-sky-300 font-bold transition-all drop-shadow-[0_0_4px_rgba(56,189,248,0.25)]">{dirStr}</span>
+      <span className="text-cyan-400 font-bold drop-shadow-[0_0_6px_rgba(0,240,255,0.4)] mr-1">$</span>
 
       {/* Hidden input taking up cursor focus */}
-      <div className="flex-1 relative flex items-center min-w-[100px] font-semibold break-all whitespace-pre-wrap text-[var(--term-fg)]">
+      <div className="flex-1 relative flex items-center min-w-[100px] font-semibold break-all whitespace-pre-wrap text-cyan-100 font-mono">
         <input
           ref={inputRef}
           type="text"
@@ -91,13 +93,13 @@ export function TerminalInput({
         />
         
         {/* Render text before the cursor */}
-        <span>{before}</span>
+        <span className="text-cyan-50 selection:bg-cyan-500/30 selection:text-white">{before}</span>
         
-        {/* Simple thin vertical line blinking cursor */}
-        <span className="inline-block w-[1.5px] h-4 bg-[var(--term-cursor)] shadow-[0_0_4px_var(--term-cursor)] align-middle shrink-0 select-none mx-[0.5px] animate-[blink_1s_infinite]" />
+        {/* eDEX-UI Glowing Block Cursor */}
+        <span className="inline-block w-2 h-4 bg-cyan-400 shadow-[0_0_8px_#00f0ff] align-middle shrink-0 select-none mx-[0.5px] animate-[blink_1s_infinite] opacity-90" />
 
         {/* Render text after the cursor */}
-        <span>{after}</span>
+        <span className="text-cyan-50 selection:bg-cyan-500/30 selection:text-white">{after}</span>
       </div>
 
       <style jsx global>{`

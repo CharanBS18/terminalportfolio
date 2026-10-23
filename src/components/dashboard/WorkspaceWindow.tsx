@@ -62,14 +62,14 @@ export function WorkspaceWindow({
 
   if (!isOpen) return null;
 
-  // Accents strictly styled to matches: #00FF8C (green), #00FFD0 (cyan), #93FFB6 (mint), #D2FFF0 (light)
+  // Accents strictly styled to eDEX-UI neon tones
   const accentBorderColors: Record<string, string> = {
-    green: "border-[#00FF8C]/30 hover:border-[#00FF8C]/60 shadow-[0_0_12px_rgba(0,255,140,0.1)]",
-    cyan: "border-[#00FFD0]/30 hover:border-[#00FFD0]/60 shadow-[0_0_12px_rgba(0,255,208,0.1)]",
-    purple: "border-[#93FFB6]/30 hover:border-[#93FFB6]/60 shadow-[0_0_12px_rgba(147,255,182,0.1)]",
-    amber: "border-amber-500/35 hover:border-amber-500/60 shadow-[0_0_12px_rgba(245,158,11,0.1)]",
-    red: "border-red-500/40 hover:border-red-500/70 shadow-[0_0_12px_rgba(239,68,68,0.12)]",
-    white: "border-[#D2FFF0]/25 hover:border-[#D2FFF0]/55 shadow-[0_0_12px_rgba(210,255,240,0.08)]",
+    cyan: "border-cyan-400/35 hover:border-cyan-400/70 shadow-[0_0_15px_rgba(0,240,255,0.12)]",
+    green: "border-emerald-400/35 hover:border-emerald-400/70 shadow-[0_0_15px_rgba(52,211,153,0.12)]",
+    purple: "border-purple-400/35 hover:border-purple-400/70 shadow-[0_0_15px_rgba(192,132,252,0.12)]",
+    amber: "border-amber-400/35 hover:border-amber-400/70 shadow-[0_0_15px_rgba(251,191,36,0.12)]",
+    red: "border-red-400/40 hover:border-red-400/75 shadow-[0_0_15px_rgba(248,113,113,0.15)]",
+    white: "border-teal-200/30 hover:border-teal-200/60 shadow-[0_0_15px_rgba(204,251,241,0.1)]",
   };
 
   const borderClass = accentBorderColors[accentColor] || accentBorderColors.cyan;
@@ -88,8 +88,8 @@ export function WorkspaceWindow({
   } else if (dimension === "1984") {
     containerStyles = "border-2 border-white bg-black text-white rounded-none outline outline-1 outline-white -outline-offset-[5px] font-mono";
   } else {
-    // Classified military terminal style: sharp corners, dark slate bg, scratched reflection glass
-    containerStyles = `rounded-md backdrop-blur-md bg-[#050505]/90 border font-mono ${borderClass} signal-glitch-anim`;
+    // Authentic eDEX-UI panel: precision borders, dark glass, subtle inner glow
+    containerStyles = `rounded-sm backdrop-blur-md bg-[#030914]/92 border font-mono ${borderClass} signal-glitch-anim`;
   }
 
   // Animation delay style
@@ -106,11 +106,10 @@ export function WorkspaceWindow({
       animate={isMinimized ? { scale: 0.1, y: 500, opacity: 0 } : { scale: 1, y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: animateDelay, ease: [0.16, 1, 0.3, 1] }}
       onPointerDown={() => onFocus?.()}
-      className={`absolute select-none overflow-hidden flex flex-col pointer-events-auto ${containerStyles} ${animationClass} ${
-        isMaximized 
-          ? "fixed inset-x-4 top-16 bottom-24 !z-[999] !w-auto !h-auto" 
+      className={`absolute select-none overflow-hidden flex flex-col pointer-events-auto ${containerStyles} ${animationClass} ${isMaximized
+          ? "fixed inset-x-4 top-16 bottom-24 !z-[999] !w-auto !h-auto"
           : `${defaultSize}`
-      } ${className}`}
+        } ${className}`}
       style={{
         display: isMinimized ? "none" : "flex",
         zIndex: isMaximized ? 999 : zIndex,
@@ -120,6 +119,16 @@ export function WorkspaceWindow({
         animationDelay: `${animateDelay}s`,
       }}
     >
+      {/* eDEX-UI Distinctive Corner Brackets */}
+      {dimension !== "1984" && dimension !== "1995" && (
+        <>
+          <span className="edex-bracket-tl" />
+          <span className="edex-bracket-tr" />
+          <span className="edex-bracket-bl" />
+          <span className="edex-bracket-br" />
+        </>
+      )}
+
       {/* Dirty glass, reflection screen overlay */}
       {dimension !== "1984" && dimension !== "1995" && (
         <div className="absolute inset-0 pointer-events-none dirty-glass z-10" />
@@ -177,48 +186,60 @@ export function WorkspaceWindow({
           </div>
         </div>
       ) : (
-        /* Military Classified style Header bar */
+        /* eDEX-UI Sci-Fi HUD Header Bar */
         <div
           onPointerDown={handlePointerDown}
-          className="bg-[#0A0A0A]/95 border-b border-[#00FF8C]/15 px-4 py-2 flex items-center justify-between cursor-grab active:cursor-grabbing text-zinc-300 text-xs select-none shrink-0 z-20"
+          className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between cursor-grab active:cursor-grabbing text-zinc-300 text-xs select-none shrink-0 z-20"
         >
-          <div className="flex items-center space-x-1.5 shrink-0">
-            <button
-              onClick={(e) => { e.stopPropagation(); onClose(); }}
-              className="w-2.5 h-2.5 rounded-full bg-red-600/60 hover:bg-red-500 border border-red-950 flex items-center justify-center text-[6px] text-red-100 font-bold active:opacity-85 cursor-pointer relative"
-              aria-label="Close"
-            />
-            <button
-              onClick={(e) => { e.stopPropagation(); onMinimize(); }}
-              className="w-2.5 h-2.5 rounded-full bg-amber-600/60 hover:bg-amber-500 border border-amber-950 flex items-center justify-center text-[6px] text-amber-100 font-bold active:opacity-85 cursor-pointer relative"
-              aria-label="Minimize"
-            />
-            <button
-              onClick={(e) => { e.stopPropagation(); onMaximize(); }}
-              className="w-2.5 h-2.5 rounded-full bg-emerald-600/60 hover:bg-emerald-500 border border-emerald-950 flex items-center justify-center text-[6px] text-green-100 font-bold active:opacity-85 cursor-pointer relative"
-              aria-label="Maximize"
-            />
+          <div className="flex items-center space-x-2 shrink-0 min-w-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_4px_#00f0ff]" />
+            <span className="text-[9px] font-mono text-cyan-400/75 uppercase tracking-wider hidden sm:inline">
+              // [{id.replace(/^window-/, "").toUpperCase()}]
+            </span>
           </div>
 
-          <span className="font-extrabold flex items-center tracking-wider text-[9px] uppercase opacity-85 select-none font-mono truncate px-4">
-            {icon && <span className="mr-1.5 text-zinc-500 select-none shrink-0">{icon}</span>}
+          <span className="font-bold flex items-center tracking-widest text-[10px] uppercase text-cyan-100 font-mono truncate px-2">
+            {icon && <span className="mr-1.5 text-cyan-400 select-none shrink-0">{icon}</span>}
             {title}
           </span>
 
-          <div className="flex items-center space-x-1 shrink-0">
-            <span className="w-1 h-1 rounded-full bg-[#00FF8C] animate-ping" />
+          {/* eDEX-UI HUD Window Controls */}
+          <div className="flex items-center space-x-1 shrink-0 font-mono">
+            <button
+              onClick={(e) => { e.stopPropagation(); onMinimize(); }}
+              className="w-5 h-4 flex items-center justify-center text-[9px] text-cyan-400/70 hover:text-cyan-200 border border-cyan-500/20 hover:border-cyan-400/60 hover:bg-cyan-500/10 rounded-xs transition-colors cursor-pointer"
+              title="Minimize"
+              aria-label="Minimize"
+            >
+              _
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onMaximize(); }}
+              className="w-5 h-4 flex items-center justify-center text-[8px] text-cyan-400/70 hover:text-cyan-200 border border-cyan-500/20 hover:border-cyan-400/60 hover:bg-cyan-500/10 rounded-xs transition-colors cursor-pointer"
+              title="Maximize"
+              aria-label="Maximize"
+            >
+              ▢
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onClose(); }}
+              className="w-5 h-4 flex items-center justify-center text-[9px] text-red-400/70 hover:text-red-200 border border-red-500/20 hover:border-red-400/70 hover:bg-red-500/15 rounded-xs transition-colors cursor-pointer"
+              title="Close"
+              aria-label="Close"
+            >
+              ✕
+            </button>
           </div>
         </div>
       )}
 
       {/* Widget Container Content */}
-      <div className={`flex-1 overflow-auto select-none flex flex-col z-20 ${
-        dimension === "1995" 
-          ? "bg-black text-[#00FF8C] border-t border-l border-zinc-800" 
-          : dimension === "1984" 
-          ? "bg-black text-white p-1 border-t-2 border-white" 
-          : "bg-black/60"
-      }`}>
+      <div className={`flex-1 overflow-auto select-none flex flex-col z-20 edex-scrollbar ${dimension === "1995"
+          ? "bg-black text-[#00FF8C] border-t border-l border-zinc-800"
+          : dimension === "1984"
+            ? "bg-black text-white p-1 border-t-2 border-white"
+            : "bg-[#020713]/85"
+        }`}>
         {children}
       </div>
     </motion.div>

@@ -48,6 +48,7 @@ import { SurveillanceWidget } from "../dashboard/SurveillanceWidget";
 import { WorldClockWidget } from "../dashboard/WorldClockWidget";
 import { WarningWidget } from "../dashboard/WarningWidget";
 import { useTerminalEvent } from "@/hooks/useTerminalEvent";
+import { EDexKeyboardDeck } from "../dashboard/EDexKeyboardDeck";
 
 // Import Bunker monitoring widgets
 import { 
@@ -116,8 +117,8 @@ interface WindowState {
 }
 
 export function DesktopContainer() {
-  // Theme & Dimension states
-  const [workspaceTheme, setWorkspaceTheme] = useState("green");
+  // Theme & Dimension states (defaulting to eDEX-UI signature cyan)
+  const [workspaceTheme, setWorkspaceTheme] = useState("cyan");
   const [dimension, setDimension] = useState("2026");
   const [isMelting, setIsMelting] = useState(false);
   const [isTornadoActive, setIsTornadoActive] = useState(false);
@@ -238,57 +239,55 @@ export function DesktopContainer() {
       const h = window.innerHeight;
       setIsDesktop(w >= 1024);
 
-      // Terminal dimensions: 56vw width, 460px height, visual center
-      const termW = Math.floor(w * 0.56);
-      const termH = 460;
+      // eDEX-UI 3-Column Balanced Layout Sizing
+      const sideW = Math.max(260, Math.min(360, Math.floor(w * 0.22)));
+      const termW = Math.min(840, Math.max(540, w - (sideW * 2) - 40));
       const termX = Math.floor((w - termW) / 2);
-      const termY = Math.floor((h - termH) / 2) + 20;
+      const termY = 56;
+      const leftX = 16;
+      const rightX = w - sideW - 16;
 
       setPositions({
         terminal: { x: termX, y: termY },
         
-        // Top Row (y: 65)
-        logs: { x: 30, y: 65 },
-        netTopology: { x: Math.floor(w * 0.29), y: 65 },
-        globe: { x: w - Math.floor(w * 0.28) - 30, y: 65 },
-        
-        // Middle Row (y: 260)
-        cpu: { x: 30, y: 260 },
-        packetInspector: { x: Math.floor(w * 0.29), y: 260 },
-        satelliteFeedInfo: { x: w - Math.floor(w * 0.28) - 30, y: 320 },
-        ascii: { x: w - Math.floor(w * 0.28) - 30, y: h - 240 - 100 },
-        
-        // Lower Row (y: 455)
-        ai: { x: 30, y: 455 },
-        network: { x: 30, y: h - 240 - 100 },
-        warning: { x: Math.floor(w * 0.38), y: 645 },
-        
-        // Bottom Row (y: 690)
-        threatIntel: { x: 30, y: 690 },
-        processManager: { x: Math.floor(w * 0.20), y: 690 },
-        radar: { x: Math.floor(w * 0.38), y: 455 },
-        fileExplorer: { x: Math.floor(w * 0.58), y: 690 },
-        sshSessions: { x: Math.floor(w * 0.78) - 30, y: 690 },
-        visualizer: { x: Math.floor(w * 0.74) - 30, y: 520 },
-        clock: { x: Math.floor(w * 0.78) - 30, y: 565 },
+        // Left Column (Telemetry & Logs)
+        logs: { x: leftX, y: 56 },
+        cpu: { x: leftX, y: 312 },
+        threatIntel: { x: leftX, y: 538 },
+        netTopology: { x: leftX, y: 740 },
+        processManager: { x: leftX, y: 740 },
+        network: { x: leftX, y: 538 },
+        ai: { x: leftX, y: 312 },
+        powerMonitor: { x: leftX, y: 312 },
+        diskActivity: { x: leftX, y: 538 },
+        activeServices: { x: leftX, y: 740 },
 
-        // Hidden/Toggled panels
-        github: { x: Math.floor(w * 0.20), y: 150 },
-        matrix: { x: Math.floor(w * 0.15), y: 650 },
-        code: { x: Math.floor(w * 0.50), y: 650 },
-        dockerK8s: { x: Math.floor(w * 0.65), y: 65 },
-        gitActivity: { x: Math.floor(w * 0.45), y: 65 },
-        memoryMap: { x: Math.floor(w * 0.45), y: 260 },
-        firewall: { x: Math.floor(w * 0.74) - 30, y: 690 },
-        missionObjectives: { x: Math.floor(w * 0.10), y: 150 },
-        cryptoTicker: { x: Math.floor(w * 0.15), y: 455 },
-        weatherTime: { x: Math.floor(w * 0.80), y: 455 },
-        diskActivity: { x: Math.floor(w * 0.70), y: 260 },
-        powerMonitor: { x: Math.floor(w * 0.20), y: 260 },
-        secureNotes: { x: Math.floor(w * 0.15), y: 200 },
-        terminalHistory: { x: Math.floor(w * 0.65), y: 200 },
-        activeServices: { x: Math.floor(w * 0.25), y: 400 },
-        signalAnalyzer: { x: Math.floor(w * 0.55), y: 400 },
+        // Right Column (Geospatial & Feeds)
+        globe: { x: rightX, y: 56 },
+        satelliteFeedInfo: { x: rightX, y: 312 },
+        ascii: { x: rightX, y: 410 },
+        radar: { x: rightX, y: 640 },
+        visualizer: { x: rightX, y: 640 },
+        sshSessions: { x: rightX, y: 740 },
+        firewall: { x: rightX, y: 740 },
+        clock: { x: rightX, y: 640 },
+        weatherTime: { x: rightX, y: 410 },
+
+        // Center / Toggled Overlays
+        fileExplorer: { x: Math.floor(w * 0.25), y: 680 },
+        github: { x: Math.floor(w * 0.22), y: 150 },
+        matrix: { x: Math.floor(w * 0.18), y: 620 },
+        code: { x: Math.floor(w * 0.48), y: 620 },
+        packetInspector: { x: Math.floor(w * 0.26), y: 312 },
+        warning: { x: Math.floor(w * 0.36), y: 645 },
+        dockerK8s: { x: Math.floor(w * 0.60), y: 65 },
+        gitActivity: { x: Math.floor(w * 0.42), y: 65 },
+        memoryMap: { x: Math.floor(w * 0.42), y: 260 },
+        missionObjectives: { x: Math.floor(w * 0.12), y: 150 },
+        cryptoTicker: { x: Math.floor(w * 0.16), y: 455 },
+        secureNotes: { x: Math.floor(w * 0.16), y: 200 },
+        terminalHistory: { x: Math.floor(w * 0.60), y: 200 },
+        signalAnalyzer: { x: Math.floor(w * 0.52), y: 400 },
         finder: { x: Math.floor(w * 0.25), y: 150 }
       });
     };
@@ -366,46 +365,56 @@ export function DesktopContainer() {
   const resetWorkspaceLayout = () => {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const termW = Math.floor(w * 0.50);
-    const termH = 460;
+
+    // eDEX-UI 3-Column Balanced Layout Sizing
+    const sideW = Math.max(260, Math.min(360, Math.floor(w * 0.22)));
+    const termW = Math.min(840, Math.max(540, w - (sideW * 2) - 40));
     const termX = Math.floor((w - termW) / 2);
-    const termY = Math.floor((h - termH) / 2) + 20;
+    const termY = 56;
+    const leftX = 16;
+    const rightX = w - sideW - 16;
 
     setPositions({
       terminal: { x: termX, y: termY },
-      logs: { x: 30, y: 65 },
-      cpu: { x: 30, y: 260 },
-      ai: { x: 30, y: 455 },
-      network: { x: 75, y: 550 },
-      threatIntel: { x: 30, y: 690 },
-      netTopology: { x: Math.floor(w * 0.29), y: 65 },
-      packetInspector: { x: Math.floor(w * 0.29), y: 260 },
-      processManager: { x: Math.floor(w * 0.29), y: 690 },
-      warning: { x: Math.floor(w * 0.38), y: 645 },
-      radar: { x: Math.floor(w * 0.38), y: 455 },
-      fileExplorer: { x: Math.floor(w * 0.58), y: 690 },
-      globe: { x: w - Math.floor(w * 0.28) - 30, y: 65 },
-      satelliteFeedInfo: { x: w - Math.floor(w * 0.28) - 30, y: 320 },
-      ascii: { x: w - Math.floor(w * 0.28) - 30, y: 420 },
-      visualizer: { x: Math.floor(w * 0.74) - 30, y: 520 },
-      clock: { x: Math.floor(w * 0.78) - 30, y: 565 },
-      sshSessions: { x: Math.floor(w * 0.78) - 30, y: 690 },
-      github: { x: Math.floor(w * 0.20), y: 150 },
-      matrix: { x: Math.floor(w * 0.15), y: 650 },
-      code: { x: Math.floor(w * 0.50), y: 650 },
-      dockerK8s: { x: Math.floor(w * 0.65), y: 65 },
-      gitActivity: { x: Math.floor(w * 0.45), y: 65 },
-      memoryMap: { x: Math.floor(w * 0.45), y: 260 },
-      firewall: { x: Math.floor(w * 0.74) - 30, y: 690 },
-      missionObjectives: { x: Math.floor(w * 0.10), y: 150 },
-      cryptoTicker: { x: Math.floor(w * 0.15), y: 455 },
-      weatherTime: { x: Math.floor(w * 0.80), y: 455 },
-      diskActivity: { x: Math.floor(w * 0.70), y: 260 },
-      powerMonitor: { x: Math.floor(w * 0.20), y: 260 },
-      secureNotes: { x: Math.floor(w * 0.15), y: 200 },
-      terminalHistory: { x: Math.floor(w * 0.65), y: 200 },
-      activeServices: { x: Math.floor(w * 0.25), y: 400 },
-      signalAnalyzer: { x: Math.floor(w * 0.55), y: 400 },
+      
+      // Left Column (Telemetry & Logs)
+      logs: { x: leftX, y: 56 },
+      cpu: { x: leftX, y: 312 },
+      threatIntel: { x: leftX, y: 538 },
+      netTopology: { x: leftX, y: 740 },
+      processManager: { x: leftX, y: 740 },
+      network: { x: leftX, y: 538 },
+      ai: { x: leftX, y: 312 },
+      powerMonitor: { x: leftX, y: 312 },
+      diskActivity: { x: leftX, y: 538 },
+      activeServices: { x: leftX, y: 740 },
+
+      // Right Column (Geospatial & Feeds)
+      globe: { x: rightX, y: 56 },
+      satelliteFeedInfo: { x: rightX, y: 312 },
+      ascii: { x: rightX, y: 410 },
+      radar: { x: rightX, y: 640 },
+      visualizer: { x: rightX, y: 640 },
+      sshSessions: { x: rightX, y: 740 },
+      firewall: { x: rightX, y: 740 },
+      clock: { x: rightX, y: 640 },
+      weatherTime: { x: rightX, y: 410 },
+
+      // Center / Toggled Overlays
+      fileExplorer: { x: Math.floor(w * 0.25), y: 680 },
+      github: { x: Math.floor(w * 0.22), y: 150 },
+      matrix: { x: Math.floor(w * 0.18), y: 620 },
+      code: { x: Math.floor(w * 0.48), y: 620 },
+      packetInspector: { x: Math.floor(w * 0.26), y: 312 },
+      warning: { x: Math.floor(w * 0.36), y: 645 },
+      dockerK8s: { x: Math.floor(w * 0.60), y: 65 },
+      gitActivity: { x: Math.floor(w * 0.42), y: 65 },
+      memoryMap: { x: Math.floor(w * 0.42), y: 260 },
+      missionObjectives: { x: Math.floor(w * 0.12), y: 150 },
+      cryptoTicker: { x: Math.floor(w * 0.16), y: 455 },
+      secureNotes: { x: Math.floor(w * 0.16), y: 200 },
+      terminalHistory: { x: Math.floor(w * 0.60), y: 200 },
+      signalAnalyzer: { x: Math.floor(w * 0.52), y: 400 },
       finder: { x: Math.floor(w * 0.25), y: 150 }
     });
 
@@ -752,13 +761,14 @@ export function DesktopContainer() {
   ];
 
   // Accents strictly styled to matches: #00FF8C (green), #00FFD0 (cyan), #93FFB6 (mint), #D2FFF0 (light)
+  // eDEX-UI Status Indicator Colors
   const indicatorColors: Record<string, string> = {
-    green: "bg-[#00FF8C] shadow-[0_0_6px_#00FF8C]",
-    cyan: "bg-[#00FFD0] shadow-[0_0_6px_#00FFD0]",
-    purple: "bg-[#93FFB6] shadow-[0_0_6px_#93FFB6]",
-    amber: "bg-amber-500 shadow-[0_0_6px_#f59e0b]",
-    red: "bg-red-500 shadow-[0_0_6px_#ef4444]",
-    white: "bg-[#D2FFF0] shadow-[0_0_6px_#D2FFF0]"
+    cyan: "bg-[#00f0ff] shadow-[0_0_8px_#00f0ff]",
+    green: "bg-[#00ff88] shadow-[0_0_8px_#00ff88]",
+    purple: "bg-[#c084fc] shadow-[0_0_8px_#c084fc]",
+    amber: "bg-amber-400 shadow-[0_0_8px_#fbbf24]",
+    red: "bg-red-500 shadow-[0_0_8px_#ef4444]",
+    white: "bg-[#D2FFF0] shadow-[0_0_8px_#D2FFF0]"
   };
 
   const activeIndicator = indicatorColors[workspaceTheme] || indicatorColors.cyan;
@@ -768,7 +778,7 @@ export function DesktopContainer() {
       ref={desktopRef}
       data-dimension={dimension}
       data-melting={isMelting}
-      className={`min-h-screen w-full relative overflow-hidden select-none font-mono text-zinc-200 bg-[#050505] ${
+      className={`min-h-screen w-full relative overflow-hidden select-none font-mono text-cyan-100 edex-grid-bg bg-[#020610] ${
         isTornadoActive ? "tornado-active" : ""
       }`}
     >
@@ -778,7 +788,7 @@ export function DesktopContainer() {
           className={`absolute inset-0 pointer-events-none select-none transition-all duration-700 bg-black z-0 ${
             isGlitchingPikachu 
               ? "opacity-85 scale-105 duration-100 crt-flicker invert contrast-[250%] brightness-[80%]" 
-              : "opacity-[0.16] scale-100 mix-blend-screen"
+              : "opacity-[0.14] scale-100 mix-blend-screen"
           }`}
         >
           <AsciiArt className="w-full h-full object-cover" />
@@ -793,25 +803,43 @@ export function DesktopContainer() {
       )}
 
       {/* 2. Desktop CRT scanlines overlay (z-10) */}
-      <div className="scanlines z-10 pointer-events-none absolute inset-0" />
+      <div className="scanlines z-10 pointer-events-none absolute inset-0 opacity-[0.08]" />
 
-      {/* 2. Fullscreen HUD Top Status bar */}
-      <header className="fixed top-0 inset-x-0 h-11 bg-zinc-950/80 border-b border-white/5 backdrop-blur-md z-50 flex items-center justify-between px-4 text-[10px] select-none text-zinc-400">
-        <div className="flex items-center space-x-4 shrink-0">
-          <div className="flex items-center gap-1.5 font-bold tracking-wider text-zinc-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            CH-WORKSTATION v3.1
+      {/* Ambient HUD Corner Telemetry Marks */}
+      <div className="absolute top-14 left-4 z-10 pointer-events-none text-[8px] font-mono text-cyan-500/40 hidden xl:block select-none leading-tight">
+        <div>+ [00,00] // GRID: 100%</div>
+        <div>SYS: SECURE_UPLINK</div>
+      </div>
+      <div className="absolute top-14 right-4 z-10 pointer-events-none text-[8px] font-mono text-cyan-500/40 hidden xl:block select-none text-right leading-tight">
+        <div>+ [99,00] // SAT: ACTIVE</div>
+        <div>LAT: 12.9716°N LON: 77.5946°E</div>
+      </div>
+      <div className="absolute bottom-20 left-4 z-10 pointer-events-none text-[8px] font-mono text-cyan-500/40 hidden xl:block select-none leading-tight">
+        <div>+ [00,99] // BUFFER: STABLE</div>
+        <div>CLEARANCE: LEVEL-5 ROOT</div>
+      </div>
+      <div className="absolute bottom-20 right-4 z-10 pointer-events-none text-[8px] font-mono text-cyan-500/40 hidden xl:block select-none text-right leading-tight">
+        <div>+ [99,99] // OPERATOR: CHARAN</div>
+        <div>ENCRYPT: AES-256-GCM</div>
+      </div>
+
+      {/* 2. Fullscreen eDEX-UI Top Status HUD Header Bar */}
+      <header className="fixed top-0 inset-x-0 h-11 bg-[#020713]/90 border-b border-cyan-500/25 backdrop-blur-md z-50 flex items-center justify-between px-4 text-[10px] select-none text-cyan-300/80 font-mono">
+        <div className="flex items-center space-x-3 shrink-0">
+          <div className="flex items-center gap-2 font-bold tracking-widest text-cyan-200">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_6px_#00f0ff]" />
+            eDEX-UI // CHARAN-SEC v3.1
           </div>
-          <span className="hidden sm:inline text-zinc-600">//</span>
-          <span className="hidden sm:inline font-semibold">PING: 12ms</span>
-          <span className="hidden md:inline text-zinc-600">//</span>
-          <span className="hidden md:inline flex items-center gap-1">
+          <span className="hidden sm:inline text-cyan-600/70">//</span>
+          <span className="hidden sm:inline text-cyan-400 font-semibold tracking-wider">PING: 12ms</span>
+          <span className="hidden md:inline text-cyan-600/70">//</span>
+          <span className="hidden md:inline flex items-center gap-1 text-emerald-400 tracking-wider">
             <Radio className="w-3.5 h-3.5 text-cyan-400" /> SECURE GRID
           </span>
         </div>
 
         {/* Middle quick toggles for all windows */}
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none px-2 py-1 select-none">
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none px-2 py-1 select-none">
           {[
             { id: "terminal", icon: <TermIcon className="w-3.5 h-3.5" />, label: "Terminal" },
             { id: "globe", icon: <Globe className="w-3.5 h-3.5" />, label: "Globe" },
@@ -857,8 +885,8 @@ export function DesktopContainer() {
               <button
                 key={item.id}
                 onClick={() => toggleWindow(item.id)}
-                className={`relative flex items-center justify-center p-1.5 rounded transition-all duration-150 cursor-pointer shrink-0 ${
-                  isActive ? "bg-white/5 text-white" : "hover:bg-white/5 hover:text-zinc-200"
+                className={`relative flex items-center justify-center p-1.5 rounded-xs transition-all duration-150 cursor-pointer shrink-0 border border-cyan-500/20 bg-cyan-950/20 text-cyan-300 hover:border-cyan-400/60 hover:bg-cyan-500/20 ${
+                  isActive ? "!border-cyan-400 !bg-cyan-500/35 !text-white shadow-[0_0_8px_rgba(0,240,255,0.4)]" : "hover:text-white"
                 }`}
                 title={`Toggle ${item.label} Window`}
               >
@@ -872,43 +900,43 @@ export function DesktopContainer() {
         </div>
 
         {/* Right HUD Controls */}
-        <div className="flex items-center space-x-3.5 shrink-0 select-none">
+        <div className="flex items-center space-x-3 shrink-0 select-none">
           {/* Theme Selector */}
-          {/* Theme Selector */}
-          <div className="hidden md:flex items-center gap-1.5">
+          <div className="hidden md:flex items-center gap-1.5 px-2 py-1 rounded-xs bg-cyan-950/30 border border-cyan-500/20">
             {dimension === "1984" || dimension === "1995" ? (
               <span className="text-zinc-500 font-mono text-[9px] uppercase tracking-wider select-none">[Theme Locked]</span>
             ) : (
-              ["green", "cyan", "purple", "amber", "red", "white"].map((themeName) => (
+              ["cyan", "green", "purple", "amber", "red", "white"].map((themeName) => (
                 <button
                   key={themeName}
                   onClick={() => {
                     setWorkspaceTheme(themeName);
                     playClick();
                   }}
-                  className={`w-2.5 h-2.5 rounded-full border border-white/10 hover:scale-110 active:scale-90 transition-transform cursor-pointer ${
-                    themeName === "green" ? "bg-[#00FF8C]" :
-                    themeName === "cyan" ? "bg-[#00FFD0]" :
-                    themeName === "purple" ? "bg-[#93FFB6]" :
-                    themeName === "amber" ? "bg-amber-500" :
+                  className={`w-2.5 h-2.5 rounded-full border border-white/20 hover:scale-110 active:scale-90 transition-transform cursor-pointer ${
+                    themeName === "cyan" ? "bg-[#00f0ff] shadow-[0_0_6px_#00f0ff]" :
+                    themeName === "green" ? "bg-[#00ff88]" :
+                    themeName === "purple" ? "bg-[#c084fc]" :
+                    themeName === "amber" ? "bg-amber-400" :
                     themeName === "red" ? "bg-red-500" : "bg-[#D2FFF0]"
-                  } ${workspaceTheme === themeName ? "ring-1 ring-white scale-110" : ""}`}
+                  } ${workspaceTheme === themeName ? "ring-1 ring-white scale-125" : ""}`}
                   title={`${themeName} theme`}
                 />
               ))
             )}
           </div>
 
-          <span className="hidden sm:inline text-zinc-700">|</span>
+          <span className="hidden sm:inline text-cyan-700">|</span>
 
           {/* Reset Workspace Tiling Button */}
           {isDesktop && (
             <button
               onClick={resetWorkspaceLayout}
-              className="p-1 rounded hover:bg-white/5 hover:text-white transition-colors cursor-pointer"
-              title="Reset Window Grid"
+              className="px-2 py-1 rounded-xs border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 text-cyan-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1 text-[9px]"
+              title="Reset eDEX HUD Grid"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
+              <RotateCcw className="w-3 h-3 text-cyan-400" />
+              <span className="hidden lg:inline">[RESET HUD]</span>
             </button>
           )}
 
@@ -918,17 +946,19 @@ export function DesktopContainer() {
               toggleMute();
               playBeep(isMuted ? 880 : 440, 0.05);
             }}
-            className="p-1 rounded hover:bg-white/5 hover:text-white transition-colors cursor-pointer"
+            className="p-1 rounded-xs border border-cyan-500/25 hover:border-cyan-400 hover:bg-cyan-500/20 text-cyan-300 hover:text-white transition-colors cursor-pointer"
             title={isMuted ? "Unmute system" : "Mute system"}
           >
             {isMuted ? (
               <VolumeX className="w-3.5 h-3.5 text-red-500" />
             ) : (
-              <Volume2 className="w-3.5 h-3.5 text-zinc-400" />
+              <Volume2 className="w-3.5 h-3.5 text-cyan-400" />
             )}
           </button>
 
-          <span className="text-zinc-500">{systemTime}</span>
+          <span className="text-cyan-400 font-bold tracking-widest bg-cyan-950/40 px-2 py-0.5 rounded-xs border border-cyan-500/20">
+            [{systemTime}]
+          </span>
         </div>
       </header>
 
@@ -969,32 +999,41 @@ export function DesktopContainer() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                 className={`flex flex-col overflow-hidden ${
+                 className={`flex flex-col gap-2 overflow-hidden ${
                   dimension === "2099" ? "cyberpunk-tilt" : ""
                 } ${
                   windowStates.terminal.isMaximized
                     ? "fixed inset-4 z-40 max-w-none h-[calc(100vh-2rem)]"
-                    : "w-[56vw] h-[460px]"
+                    : "w-[54vw] max-w-[880px]"
                 } ${isGlitchingPikachu ? "shaking-window" : ""}`}
               >
-                <TerminalContainer
-                  onClose={() => updateWindowState("terminal", { isOpen: false })}
-                  onMinimize={() => updateWindowState("terminal", { isMinimized: true })}
-                  onMaximize={() => updateWindowState("terminal", { isMaximized: !windowStates.terminal.isMaximized })}
-                  isMinimized={windowStates.terminal.isMinimized}
-                  theme={workspaceTheme}
-                  setTheme={setWorkspaceTheme}
-                  onSystemCrash={() => {
-                    setIsGlitchingPikachu(true);
-                    playBuzzer();
-                  }}
-                  onSystemRecovery={() => {
-                    setIsGlitchingPikachu(false);
-                    playBeep(440, 0.1, false);
-                  }}
-                  onStateChange={handleStateChange}
-                  onHeaderPointerDown={(e) => terminalDragControls.start(e)}
-                />
+                <div className={windowStates.terminal.isMaximized ? "h-full" : "h-[420px] 2xl:h-[460px]"}>
+                  <TerminalContainer
+                    onClose={() => updateWindowState("terminal", { isOpen: false })}
+                    onMinimize={() => updateWindowState("terminal", { isMinimized: true })}
+                    onMaximize={() => updateWindowState("terminal", { isMaximized: !windowStates.terminal.isMaximized })}
+                    isMinimized={windowStates.terminal.isMinimized}
+                    theme={workspaceTheme}
+                    setTheme={setWorkspaceTheme}
+                    onSystemCrash={() => {
+                      setIsGlitchingPikachu(true);
+                      playBuzzer();
+                    }}
+                    onSystemRecovery={() => {
+                      setIsGlitchingPikachu(false);
+                      playBeep(440, 0.1, false);
+                    }}
+                    onStateChange={handleStateChange}
+                    onHeaderPointerDown={(e) => terminalDragControls.start(e)}
+                  />
+                </div>
+
+                {!windowStates.terminal.isMaximized && (
+                  <EDexKeyboardDeck
+                    themeColor={workspaceTheme}
+                    className="h-[205px] 2xl:h-[225px] shadow-2xl shrink-0"
+                  />
+                )}
               </motion.div>
             </div>
           )}
@@ -1011,7 +1050,7 @@ export function DesktopContainer() {
             onMinimize={() => updateWindowState("globe", { isMinimized: true })}
             onMaximize={() => updateWindowState("globe", { isMaximized: !windowStates.globe.isMaximized })}
             defaultPosition={positions.globe}
-            defaultSize="w-[28vw] h-[240px]"
+            defaultSize="w-[22vw] min-w-[260px] max-w-[360px] h-[240px]"
             accentColor={workspaceTheme}
             dimension={dimension}
             zIndex={zIndices.globe}
@@ -1035,7 +1074,7 @@ export function DesktopContainer() {
             onMinimize={() => updateWindowState("satelliteFeedInfo", { isMinimized: true })}
             onMaximize={() => updateWindowState("satelliteFeedInfo", { isMaximized: !windowStates.satelliteFeedInfo.isMaximized })}
             defaultPosition={positions.satelliteFeedInfo}
-            defaultSize="w-[22vw] h-[85px]"
+            defaultSize="w-[22vw] min-w-[260px] max-w-[360px] h-[85px]"
             accentColor={workspaceTheme}
             dimension={dimension}
             zIndex={zIndices.satelliteFeedInfo}
@@ -1058,7 +1097,7 @@ export function DesktopContainer() {
             onMinimize={() => updateWindowState("ascii", { isMinimized: true })}
             onMaximize={() => updateWindowState("ascii", { isMaximized: !windowStates.ascii.isMaximized })}
             defaultPosition={positions.ascii}
-            defaultSize="w-[28vw] h-[240px]"
+            defaultSize="w-[22vw] min-w-[260px] max-w-[360px] h-[240px]"
             accentColor={workspaceTheme}
             dimension={dimension}
             zIndex={zIndices.ascii}
@@ -1081,7 +1120,7 @@ export function DesktopContainer() {
             onMinimize={() => updateWindowState("logs", { isMinimized: true })}
             onMaximize={() => updateWindowState("logs", { isMaximized: !windowStates.logs.isMaximized })}
             defaultPosition={positions.logs}
-            defaultSize="w-[26vw] h-[180px]"
+            defaultSize="w-[22vw] min-w-[260px] max-w-[360px] h-[240px]"
             accentColor={workspaceTheme}
             dimension={dimension}
             zIndex={zIndices.logs}
@@ -1104,7 +1143,7 @@ export function DesktopContainer() {
             onMinimize={() => updateWindowState("cpu", { isMinimized: true })}
             onMaximize={() => updateWindowState("cpu", { isMaximized: !windowStates.cpu.isMaximized })}
             defaultPosition={positions.cpu}
-            defaultSize="w-[20vw] h-[180px]"
+            defaultSize="w-[22vw] min-w-[260px] max-w-[360px] h-[210px]"
             accentColor={workspaceTheme}
             dimension={dimension}
             zIndex={zIndices.cpu}
@@ -1127,7 +1166,7 @@ export function DesktopContainer() {
             onMinimize={() => updateWindowState("ai", { isMinimized: true })}
             onMaximize={() => updateWindowState("ai", { isMaximized: !windowStates.ai.isMaximized })}
             defaultPosition={positions.ai}
-            defaultSize="w-[20vw] h-[160px]"
+            defaultSize="w-[22vw] min-w-[260px] max-w-[360px] h-[180px]"
             accentColor={workspaceTheme}
             dimension={dimension}
             zIndex={zIndices.ai}
@@ -1151,7 +1190,7 @@ export function DesktopContainer() {
             onMinimize={() => updateWindowState("network", { isMinimized: true })}
             onMaximize={() => updateWindowState("network", { isMaximized: !windowStates.network.isMaximized })}
             defaultPosition={positions.network}
-            defaultSize="w-[28vw] h-[240px]"
+            defaultSize="w-[22vw] min-w-[260px] max-w-[360px] h-[220px]"
             accentColor={workspaceTheme}
             dimension={dimension}
             zIndex={zIndices.network}
@@ -1820,9 +1859,46 @@ export function DesktopContainer() {
         /* Mobile Mode: Scrollable Grid Layout to prevent overlaps */
         <div className="w-full min-h-screen pt-14 pb-28 px-4 overflow-y-auto relative z-20 pointer-events-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+            {/* Mobile Quick Action Strip */}
+            <div className="col-span-full edex-panel p-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none border border-cyan-500/25 relative">
+              <span className="edex-bracket-tl" />
+              <span className="edex-bracket-tr" />
+              <span className="edex-bracket-bl" />
+              <span className="edex-bracket-br" />
+              <span className="text-[9px] font-bold text-cyan-400 shrink-0 px-1 uppercase tracking-widest flex items-center gap-1 font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                EXEC:
+              </span>
+              {[
+                { label: "HELP", cmd: "help" },
+                { label: "ABOUT", cmd: "about" },
+                { label: "PROJECTS", cmd: "projects" },
+                { label: "SKILLS", cmd: "skills" },
+                { label: "EXP", cmd: "experience" },
+                { label: "CONTACT", cmd: "contact" },
+                { label: "CLEAR", cmd: "clear" },
+              ].map(item => (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("edex-command", { detail: { command: item.cmd } }));
+                    }
+                  }}
+                  className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-300 bg-cyan-950/40 hover:bg-cyan-500/20 active:scale-95 border border-cyan-500/30 rounded-xs transition-all shrink-0 cursor-pointer"
+                >
+                  [{item.label}]
+                </button>
+              ))}
+            </div>
+
             {/* Terminal Widget */}
             {windowStates.terminal.isOpen && (
-              <div className="h-[350px] overflow-hidden border border-zinc-800 rounded-xl bg-black">
+              <div className="h-[380px] overflow-hidden relative edex-panel border border-cyan-500/30">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
                 <TerminalContainer
                   onClose={() => updateWindowState("terminal", { isOpen: false })}
                   theme={workspaceTheme}
@@ -1834,112 +1910,252 @@ export function DesktopContainer() {
 
             {/* Globe Coordinates */}
             {windowStates.globe.isOpen && (
-              <div className="h-[380px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Satellite Coordinates</div>
+              <div className="h-[380px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Satellite Coordinates
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[SYS // GEO]</span>
+                </div>
                 <div className="flex-1 min-h-0"><SatelliteWidget themeColor={workspaceTheme} /></div>
               </div>
             )}
 
             {/* Surveillance Feed */}
             {windowStates.ascii.isOpen && (
-              <div className="h-[300px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Surveillance Feed</div>
+              <div className="h-[300px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Surveillance Feed
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[SYS // CAM]</span>
+                </div>
                 <div className="flex-1 min-h-0"><SurveillanceWidget /></div>
               </div>
             )}
 
             {/* Logs */}
             {windowStates.logs.isOpen && (
-              <div className="h-[250px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Live Event Log</div>
+              <div className="h-[250px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Live Event Log
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[SYS // LOGS]</span>
+                </div>
                 <div className="flex-1 min-h-0"><LogsWidget themeColor={workspaceTheme} /></div>
               </div>
             )}
 
             {/* Threat Intel */}
             {windowStates.threatIntel.isOpen && (
-              <div className="h-[200px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Threat Countermeasures</div>
+              <div className="h-[200px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-red-300 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                    Threat Countermeasures
+                  </span>
+                  <span className="text-[9px] text-red-400/60">[DEF // SEC]</span>
+                </div>
                 <div className="flex-1 min-h-0"><ThreatIntelWidget /></div>
               </div>
             )}
 
             {/* Network Topology */}
             {windowStates.netTopology.isOpen && (
-              <div className="h-[220px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Network Topology map</div>
+              <div className="h-[220px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Network Topology map
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[NET // MAP]</span>
+                </div>
                 <div className="flex-1 min-h-0"><NetworkTopologyWidget /></div>
               </div>
             )}
 
             {/* Packet Inspector */}
             {windowStates.packetInspector.isOpen && (
-              <div className="h-[200px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Packet Inspector stream</div>
+              <div className="h-[200px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Packet Inspector stream
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[PCAP // DUMP]</span>
+                </div>
                 <div className="flex-1 min-h-0"><PacketInspectorWidget /></div>
               </div>
             )}
 
             {/* SSH Sessions */}
             {windowStates.sshSessions.isOpen && (
-              <div className="h-[180px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">SSH Sessions</div>
+              <div className="h-[180px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    SSH Sessions
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[TTY // SESS]</span>
+                </div>
                 <div className="flex-1 min-h-0"><SshSessionsWidget /></div>
               </div>
             )}
 
             {/* Process Manager */}
             {windowStates.processManager.isOpen && (
-              <div className="h-[180px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Process Manager</div>
+              <div className="h-[180px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Process Manager
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[PS // AUX]</span>
+                </div>
                 <div className="flex-1 min-h-0"><ProcessManagerWidget /></div>
               </div>
             )}
 
             {/* File Explorer */}
             {windowStates.fileExplorer.isOpen && (
-              <div className="h-[180px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">File System Explorer</div>
+              <div className="h-[180px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    File System Explorer
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[VFS // ROOT]</span>
+                </div>
                 <div className="flex-1 min-h-0"><FileExplorerWidget /></div>
               </div>
             )}
 
             {/* Radar */}
             {windowStates.radar.isOpen && (
-              <div className="h-[200px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Ping Scan Radar</div>
+              <div className="h-[200px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Ping Scan Radar
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[RADAR // SCAN]</span>
+                </div>
                 <div className="flex-1 min-h-0"><RadarWidget themeColor={workspaceTheme} /></div>
               </div>
             )}
 
             {/* CPU/Memory */}
             {windowStates.cpu.isOpen && (
-              <div className="h-[250px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">System Resource Dials</div>
+              <div className="h-[250px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    System Resource Dials
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[SYS // TELEMETRY]</span>
+                </div>
                 <div className="flex-1 min-h-0"><SystemMonitorWidget themeColor={workspaceTheme} /></div>
               </div>
             )}
 
             {/* Warning Panel */}
             {windowStates.warning.isOpen && (
-              <div className="h-[180px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Security Warning Level</div>
+              <div className="h-[180px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                    Security Warning Level
+                  </span>
+                  <span className="text-[9px] text-amber-400/60">[ALERT // DEFCON]</span>
+                </div>
                 <div className="flex-1 min-h-0"><WarningWidget /></div>
               </div>
             )}
 
             {/* Audio Spectrum */}
             {windowStates.visualizer.isOpen && (
-              <div className="h-[200px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Audio Intercept Wave</div>
+              <div className="h-[200px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Audio Intercept Wave
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[AUDIO // FFT]</span>
+                </div>
                 <div className="flex-1 min-h-0"><AudioSpectrumWidget /></div>
               </div>
             )}
 
             {/* Network */}
             {windowStates.network.isOpen && (
-              <div className="h-[200px] border border-cyan-500/20 rounded-xl bg-zinc-950/70 overflow-hidden flex flex-col">
-                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase">Global Network</div>
+              <div className="h-[200px] relative edex-panel border border-cyan-500/25 overflow-hidden flex flex-col">
+                <span className="edex-bracket-tl" />
+                <span className="edex-bracket-tr" />
+                <span className="edex-bracket-bl" />
+                <span className="edex-bracket-br" />
+                <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1.5 flex items-center justify-between text-[10px] text-cyan-200 font-bold uppercase tracking-wider font-mono">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Global Network
+                  </span>
+                  <span className="text-[9px] text-cyan-400/60">[NET // WAN]</span>
+                </div>
                 <div className="flex-1 min-h-0"><GlobalNetworkWidget themeColor={workspaceTheme} /></div>
               </div>
             )}
@@ -1974,31 +2190,37 @@ export function DesktopContainer() {
           </div>
         </div>
       ) : (
-        /* macOS style Dock */
+        /* eDEX-UI HUD Dock */
         <div className={`absolute bottom-6 left-0 right-0 flex justify-center z-30 select-none pointer-events-none transition-all duration-700 ease-in-out transform ${
           isMelting ? "translate-y-32 opacity-0" : "translate-y-0 opacity-100"
         }`}>
-          <Dock className="pointer-events-auto">
-            {dockItems.map((item) => (
-              <DockIcon 
-                key={item.id}
-                src={item.src}
-                name={item.name}
-                onClick={item.action}
-                className={
-                  item.id === "secret" 
-                    ? "bg-red-950/20 border-red-500/20 animate-pulse" 
-                    : item.id === "trash" && isTrashBouncing 
-                    ? "animate-bounce" 
-                    : ""
-                }
-              >
-                {item.isOpen && (
-                  <span className={`w-1 h-1 rounded-full absolute bottom-1 scale-75 select-none ${item.id === 'secret' ? 'bg-red-500' : 'bg-white'}`} />
-                )}
-              </DockIcon>
-            ))}
-          </Dock>
+          <div className="relative pointer-events-auto">
+            <span className="edex-bracket-tl" />
+            <span className="edex-bracket-tr" />
+            <span className="edex-bracket-bl" />
+            <span className="edex-bracket-br" />
+            <Dock className="pointer-events-auto !bg-[#030916]/85 !border-cyan-500/30 shadow-[0_0_25px_rgba(0,240,255,0.18)] backdrop-blur-xl">
+              {dockItems.map((item) => (
+                <DockIcon 
+                  key={item.id}
+                  src={item.src}
+                  name={item.name}
+                  onClick={item.action}
+                  className={`hover:border-cyan-400 hover:shadow-[0_0_12px_rgba(0,240,255,0.4)] transition-all ${
+                    item.id === "secret" 
+                      ? "bg-red-950/20 border-red-500/20 animate-pulse" 
+                      : item.id === "trash" && isTrashBouncing 
+                      ? "animate-bounce" 
+                      : "!border-cyan-500/20 !bg-black/50"
+                  }`}
+                >
+                  {item.isOpen && (
+                    <span className={`w-1.5 h-1.5 rounded-full absolute bottom-1 select-none ${item.id === 'secret' ? 'bg-red-500 shadow-[0_0_6px_#ff0033]' : 'bg-cyan-400 shadow-[0_0_6px_#00f0ff]'}`} />
+                  )}
+                </DockIcon>
+              ))}
+            </Dock>
+          </div>
         </div>
       )}
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTerminalEvent } from "@/hooks/useTerminalEvent";
 
 export function SystemMonitorWidget({ themeColor = "cyan" }: { themeColor?: string }) {
   const [stats, setStats] = useState({
@@ -23,8 +24,6 @@ export function SystemMonitorWidget({ themeColor = "cyan" }: { themeColor?: stri
     }, 3500);
     return () => clearInterval(interval);
   }, []);
-
-  const { useTerminalEvent } = require("@/hooks/useTerminalEvent");
 
   useTerminalEvent((detail: { command: string }) => {
     const { command } = detail;

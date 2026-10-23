@@ -32,7 +32,7 @@ export function useTerminal(options?: UseTerminalOptions) {
   const [commandInputs, setCommandInputs] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [currentPath, setCurrentPath] = useState<string[]>(["home", "charan"]);
-  const [theme, setTheme] = useState("green");
+  const [theme, setTheme] = useState("cyan");
   const [dimension, setDimension] = useState("2026");
   const [isMelting, setIsMelting] = useState(false);
   const [isTornadoActive, setIsTornadoActive] = useState(false);
@@ -654,6 +654,57 @@ export function useTerminal(options?: UseTerminalOptions) {
     localStorage.setItem("chterminal_session", JSON.stringify(data));
   }, [theme, dimension, isBooting]);
 
+  // Listen to virtual keyboard and quick command events
+  useEffect(() => {
+    const handleEdexCommand = (e: Event) => {
+      const customEvent = e as CustomEvent<{ command: string }>;
+      if (customEvent.detail?.command) {
+        executeCommand(customEvent.detail.command);
+      }
+    };
+
+    const handleEdexKey = (e: Event) => {
+      const customEvent = e as CustomEvent<{ key: string }>;
+      if (customEvent.detail?.key) {
+        const k = customEvent.detail.key;
+        if (k === "BACKSPACE") {
+          setInput(prev => prev.slice(0, -1));
+          playClick();
+        } else if (k === "ENTER") {
+          const syntheticEvent = {
+            key: "Enter",
+            preventDefault: () => {}
+          } as unknown as React.KeyboardEvent<HTMLInputElement>;
+          handleKeyDown(syntheticEvent);
+        } else if (k === "TAB") {
+          handleAutocomplete();
+        } else if (k === "ArrowUp") {
+          const syntheticEvent = {
+            key: "ArrowUp",
+            preventDefault: () => {}
+          } as unknown as React.KeyboardEvent<HTMLInputElement>;
+          handleKeyDown(syntheticEvent);
+        } else if (k === "ArrowDown") {
+          const syntheticEvent = {
+            key: "ArrowDown",
+            preventDefault: () => {}
+          } as unknown as React.KeyboardEvent<HTMLInputElement>;
+          handleKeyDown(syntheticEvent);
+        } else if (k.length === 1) {
+          setInput(prev => prev + k);
+          playClick();
+        }
+      }
+    };
+
+    window.addEventListener("edex-command", handleEdexCommand);
+    window.addEventListener("edex-key", handleEdexKey);
+    return () => {
+      window.removeEventListener("edex-command", handleEdexCommand);
+      window.removeEventListener("edex-key", handleEdexKey);
+    };
+  }, [executeCommand, handleKeyDown, handleAutocomplete, playClick]);
+
   return {
     input,
     setInput,
@@ -668,6 +719,7 @@ export function useTerminal(options?: UseTerminalOptions) {
     isSecretEndingActive,
     setIsSecretEndingActive,
     handleKeyDown,
+    executeCommand,
     commandHistoryCount,
     isMuted,
     toggleMute,

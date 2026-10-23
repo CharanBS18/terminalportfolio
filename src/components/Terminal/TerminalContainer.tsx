@@ -195,11 +195,21 @@ export function TerminalContainer({
       {/* Background scanline filters */}
       <div className="scanlines z-10 pointer-events-none" />
       
+      {/* eDEX-UI Corner Brackets */}
+      {dimension !== "1984" && dimension !== "1995" && (
+        <>
+          <span className="edex-bracket-tl" />
+          <span className="edex-bracket-tr" />
+          <span className="edex-bracket-bl" />
+          <span className="edex-bracket-br" />
+        </>
+      )}
+
       {/* Matrix rain and Secret ending overlays */}
       {isMatrixActive && <MatrixRain onClose={() => setIsMatrixActive(false)} />}
       {isSecretEndingActive && <SecretEnding onClose={() => setIsSecretEndingActive(false)} />}
 
-      {/* macOS Traffic Lights Header */}
+      {/* macOS / Dimension / eDEX-UI Header */}
       {dimension === "1995" ? (
         /* Windows 95 Title Bar */
         <div 
@@ -262,72 +272,114 @@ export function TerminalContainer({
           </div>
         </div>
       ) : (
-        /* Default macOS style header (for 2026 and 2099) */
+        /* eDEX-UI High-Tech HUD Terminal Header */
         <div 
           onPointerDown={(e) => {
             const target = e.target as HTMLElement;
             if (target.closest("button") || target.closest("input")) return;
             onHeaderPointerDown?.(e);
           }}
-          className={`px-4 py-3 flex items-center justify-between border-b select-none shrink-0 font-sans cursor-grab active:cursor-grabbing ${
+          className={`px-3 py-2 flex items-center justify-between border-b select-none shrink-0 font-mono cursor-grab active:cursor-grabbing ${
             dimension === "2099" 
-              ? "bg-red-950/90 text-red-500 border-b-red-500/20" 
-              : "bg-[#18181b]/95 text-zinc-300 border-b-white/5"
+              ? "bg-red-950/90 text-red-500 border-b-red-500/30" 
+              : "bg-[#040e1f]/95 text-cyan-200 border-b-cyan-500/25"
           }`}
         >
-          <div className="flex-1 flex items-center gap-2 cursor-default">
-            <div className="flex items-center space-x-2">
-              <button 
-                onClick={(e) => { e.stopPropagation(); playBeep(220, 0.1, false); onClose?.(); }}
-                className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] flex items-center justify-center text-[7px] text-red-900/60 font-bold hover:after:content-['✕'] active:opacity-85 cursor-pointer"
-              />
-              <button 
-                onClick={(e) => { e.stopPropagation(); playBeep(330, 0.1, false); onMinimize?.(); }}
-                className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] flex items-center justify-center text-[7px] text-yellow-900/60 font-bold hover:after:content-['─'] active:opacity-85 cursor-pointer"
-              />
-              <button 
-                onClick={(e) => { e.stopPropagation(); playBeep(440, 0.1, false); onMaximize?.(); }}
-                className="w-3.5 h-3.5 rounded-full bg-[#27c93f] flex items-center justify-center text-[7px] text-green-900/60 font-bold hover:after:content-['⤢'] active:opacity-85 cursor-pointer"
-              />
-            </div>
-          </div>
-          <span className="text-xs font-medium select-none flex items-center">
-            <Terminal className="w-3.5 h-3.5 text-zinc-500 mr-2" />
-            Terminal — {username}@{hostname}
-          </span>
-          <div className="flex items-center space-x-3">
-            <span className="hidden sm:inline bg-zinc-800/50 px-2 py-0.5 rounded border border-zinc-700 text-zinc-400 uppercase tracking-widest text-[9px]">
-              {theme} mode
+          <div className="flex items-center gap-2 cursor-default min-w-0">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_6px_#00f0ff] shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-widest text-cyan-100 uppercase truncate">
+              [ TTY-01 // CHARAN_SHELL ]
             </span>
+            <span className="hidden md:inline text-[9px] text-cyan-400/70 border-l border-cyan-500/20 pl-2">
+              {username}@{hostname}
+            </span>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-2 px-2 py-0.5 rounded-xs bg-cyan-950/40 border border-cyan-500/20 text-[9px] text-cyan-300 tracking-wider">
+            <span>LINK: SECURE</span>
+            <span className="text-zinc-600">//</span>
+            <span>PORT: 22</span>
+            <span className="text-zinc-600">//</span>
+            <span>ENCRYPT: AES-256</span>
+          </div>
+
+          <div className="flex items-center space-x-2 shrink-0">
+            <span className="hidden sm:inline bg-cyan-950/40 px-2 py-0.5 rounded-xs border border-cyan-500/30 text-cyan-300 uppercase tracking-widest text-[9px] font-bold">
+              [{theme}]
+            </span>
+
+            {/* Audio Toggle */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 toggleMute();
                 playBeep(isMuted ? 880 : 440, 0.05);
               }}
-              className="text-zinc-400 hover:text-white transition-colors p-1 rounded hover:bg-zinc-800 cursor-pointer"
+              className="text-cyan-400/80 hover:text-cyan-100 hover:bg-cyan-500/20 border border-cyan-500/20 hover:border-cyan-400/60 p-1 rounded-xs transition-colors cursor-pointer"
               title={isMuted ? "Unmute audio" : "Mute audio"}
             >
               {isMuted ? (
-                <VolumeX className="w-4 h-4 text-red-400 drop-shadow-[0_0_4px_rgba(248,113,113,0.3)]" />
+                <VolumeX className="w-3.5 h-3.5 text-red-400 drop-shadow-[0_0_4px_rgba(248,113,113,0.3)]" />
               ) : (
-                <Volume2 className="w-4 h-4 text-[var(--term-fg)] drop-shadow-[0_0_4px_var(--term-glow)]" />
+                <Volume2 className="w-3.5 h-3.5 text-cyan-400 drop-shadow-[0_0_4px_rgba(0,240,255,0.4)]" />
               )}
             </button>
+
+            {/* eDEX HUD Window Controls */}
+            <div className="flex items-center space-x-1 pl-1 border-l border-cyan-500/20">
+              <button
+                onClick={(e) => { e.stopPropagation(); playBeep(330, 0.1, false); onMinimize?.(); }}
+                className="w-5 h-4 flex items-center justify-center text-[9px] font-mono text-cyan-400/80 hover:text-cyan-100 border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 rounded-xs transition-colors cursor-pointer"
+                title="Minimize"
+                aria-label="Minimize"
+              >
+                _
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); playBeep(440, 0.1, false); onMaximize?.(); }}
+                className="w-5 h-4 flex items-center justify-center text-[8px] font-mono text-cyan-400/80 hover:text-cyan-100 border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 rounded-xs transition-colors cursor-pointer"
+                title="Maximize"
+                aria-label="Maximize"
+              >
+                ▢
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); playBeep(220, 0.1, false); onClose?.(); }}
+                className="w-5 h-4 flex items-center justify-center text-[9px] font-mono text-red-400/80 hover:text-red-100 border border-red-500/30 hover:border-red-400 hover:bg-red-500/25 rounded-xs transition-colors cursor-pointer"
+                title="Close"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
       )}
 
       {/* Scrollable Viewport */}
-      <section className="flex-1 overflow-y-auto p-4 pr-3 terminal-scrollbar select-text min-h-0">
+      <section className="flex-1 overflow-y-auto p-4 pr-3 edex-scrollbar select-text min-h-0 bg-[#020713]/90">
         <div className="w-full">
-          {/* Welcome Header */}
-          <div className="mb-6 font-mono text-sm leading-relaxed select-none opacity-80 border-b border-zinc-800/40 pb-4">
-            <p className="text-lg font-bold text-[var(--term-fg)] drop-shadow-[0_0_8px_var(--term-glow)] mb-1">
-              SYSTEM HOST LOGGED: UNKNOWN NODE
+          {/* eDEX-UI Welcome Header Card */}
+          <div className="mb-5 font-mono text-xs leading-relaxed select-none border border-cyan-500/25 bg-cyan-950/20 p-3 rounded-xs relative">
+            <span className="edex-bracket-tl" />
+            <span className="edex-bracket-br" />
+            <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-cyan-500/20 text-[10px]">
+              <span className="text-cyan-300 font-bold tracking-widest uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                eDEX-UI // SECURE SHELL v3.1 [HOST: PORTFOLIO]
+              </span>
+              <span className="text-cyan-400/70 hidden sm:inline">AUTH: LEVEL-5 ROOT // SESSION: TTY-1</span>
+            </div>
+            <p className="text-cyan-100 font-bold drop-shadow-[0_0_8px_rgba(0,240,255,0.4)] text-sm mb-1">
+              CHARAN B S — OFFENSIVE SECURITY & PENETRATION TESTING
             </p>
-            <p>Type <span className="text-[var(--term-fg)] font-bold bg-[var(--term-dim)]/20 px-1 py-0.5 rounded">help</span> to scan available instructions.</p>
-            <p className="text-xs text-[var(--term-dim)] mt-1">Terminal connection: SECURED // Shell history count: {commandHistoryCount}</p>
+            <p className="text-cyan-300/90 text-xs">
+              Type <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">help</span> to scan available instructions, or run <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">projects</span>, <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">skills</span>, <span className="text-cyan-200 font-bold bg-cyan-500/20 px-1 py-0.5 rounded border border-cyan-400/40">contact</span>.
+            </p>
+            <div className="flex items-center justify-between text-[10px] text-cyan-400/60 mt-2 pt-1 border-t border-cyan-500/10">
+              <span>LINK: SECURE [AES-256]</span>
+              <span>SHELL HIST: {commandHistoryCount} COMMANDS</span>
+            </div>
           </div>
 
           {/* Historical command feed */}
@@ -349,49 +401,49 @@ export function TerminalContainer({
       </section>
 
       {/* Footer Virtual Keys */}
-      <footer className="border-t border-zinc-800 bg-[#0c0c0e]/95 px-4 py-3 select-none flex flex-col sm:flex-row items-center justify-between font-mono text-[9px] text-[var(--term-dim)] gap-3 shrink-0">
-        <div className="flex items-center space-x-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
-          <span>GRID LINK: STABLE // OPERATOR ACTIVE</span>
+      <footer className="border-t border-cyan-500/20 bg-[#030916]/95 px-3 py-2 select-none flex flex-col sm:flex-row items-center justify-between font-mono text-[9px] text-cyan-300/80 gap-2 shrink-0">
+        <div className="flex items-center space-x-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse drop-shadow-[0_0_4px_#34d399]" />
+          <span className="font-semibold tracking-wider text-cyan-200">GRID LINK: STABLE // OPERATOR ACTIVE</span>
         </div>
 
         {/* Virtual Quick Keys */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center justify-center gap-1 w-full sm:w-auto">
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("CLR"); }}
-            className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
+            className="px-2.5 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer font-bold"
           >
             CLR
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("UP"); }}
-            className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
+            className="px-2 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer"
           >
             ▲
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("DOWN"); }}
-            className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
+            className="px-2 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer"
           >
             ▼
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("TAB"); }}
-            className="px-3.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
+            className="px-3 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer font-bold"
           >
             TAB
           </button>
           {(isMatrixActive || isSecretEndingActive) && (
             <button
               onClick={(e) => { e.stopPropagation(); triggerMobileKey("ESC"); }}
-              className="px-2.5 py-1 bg-red-950/20 active:bg-red-500 active:text-black border border-red-500/30 text-red-400 rounded transition-colors cursor-pointer"
+              className="px-2.5 py-0.5 bg-red-950/30 hover:bg-red-500/30 text-red-400 hover:text-red-100 border border-red-500/40 rounded-xs transition-colors cursor-pointer font-bold"
             >
               ESC
             </button>
           )}
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("ENTER"); }}
-            className="px-3.5 py-1 bg-cyan-950/30 active:bg-cyan-400 active:text-black border border-cyan-400 text-cyan-400 font-bold rounded transition-colors cursor-pointer"
+            className="px-3.5 py-0.5 bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-200 hover:text-white border border-cyan-400 font-bold rounded-xs transition-colors cursor-pointer shadow-[0_0_8px_rgba(0,240,255,0.3)]"
           >
             RUN
           </button>
