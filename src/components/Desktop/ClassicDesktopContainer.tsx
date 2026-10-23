@@ -985,6 +985,7 @@ export function ClassicDesktopContainer({
                 } ${isGlitchingPikachu ? "shaking-window" : ""}`}
               >
                 <TerminalContainer
+                  dimension={dimension}
                   onClose={() => updateWindowState("terminal", { isOpen: false })}
                   onMinimize={() => updateWindowState("terminal", { isMinimized: true })}
                   onMaximize={() => updateWindowState("terminal", { isMaximized: !windowStates.terminal.isMaximized })}
@@ -1831,6 +1832,7 @@ export function ClassicDesktopContainer({
             {windowStates.terminal.isOpen && (
               <div className="h-[350px] overflow-hidden border border-zinc-800 rounded-xl bg-black">
                 <TerminalContainer
+                  dimension={dimension}
                   onClose={() => updateWindowState("terminal", { isOpen: false })}
                   theme={workspaceTheme}
                   setTheme={setWorkspaceTheme}

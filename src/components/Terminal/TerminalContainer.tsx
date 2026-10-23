@@ -28,6 +28,7 @@ interface TerminalContainerProps {
   onHeaderPointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
   theme?: string;
   setTheme?: (theme: string) => void;
+  dimension?: string;
 }
 
 export function TerminalContainer({
@@ -40,15 +41,18 @@ export function TerminalContainer({
   onStateChange,
   onHeaderPointerDown,
   theme: propTheme,
-  setTheme: propSetTheme
+  setTheme: propSetTheme,
+  dimension: propDimension
 }: TerminalContainerProps) {
   const terminalData = useTerminal({
     onSystemCrash,
-    onSystemRecovery
+    onSystemRecovery,
+    initialDimension: propDimension
   });
 
   const theme = propTheme !== undefined ? propTheme : terminalData.theme;
   const setTheme = propSetTheme !== undefined ? propSetTheme : terminalData.setTheme;
+  const dimension = propDimension !== undefined ? propDimension : terminalData.dimension;
 
   const {
     input,
@@ -77,7 +81,7 @@ export function TerminalContainer({
     isExecuting,
     triggerClear,
     secretSequence,
-    dimension,
+    dimension: hookDimension,
     isMelting,
     isTornadoActive,
     isSandboxActive
@@ -91,13 +95,13 @@ export function TerminalContainer({
     onStateChange?.({ 
       userState, 
       secretSequenceLength: secretSequence.length,
-      dimension,
+      dimension: hookDimension,
       isMelting,
       isTornadoActive,
       isSandboxActive,
       theme: terminalData.theme
     });
-  }, [userState, secretSequence, dimension, isMelting, isTornadoActive, isSandboxActive, terminalData.theme, onStateChange]);
+  }, [userState, secretSequence, hookDimension, isMelting, isTornadoActive, isSandboxActive, terminalData.theme, onStateChange]);
 
   // Scroll to bottom on history change
   useEffect(() => {

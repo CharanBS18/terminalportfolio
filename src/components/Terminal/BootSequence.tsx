@@ -74,7 +74,7 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
   }, []);
 
   return (
-    <div className="font-mono text-sm leading-relaxed p-4 select-none min-h-screen flex flex-col justify-center items-center bg-black">
+    <div className="font-mono text-sm leading-relaxed p-4 select-none w-full h-full flex flex-col justify-center items-center bg-black">
       <div className="edex-panel p-6 max-w-2xl w-full border border-white/20 shadow-[0_0_30px_rgba(0,0,0,0.8)] relative bg-black">
         <span className="edex-bracket-tl" />
         <span className="edex-bracket-tr" />

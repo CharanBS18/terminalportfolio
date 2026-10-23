@@ -8,6 +8,7 @@ import { useGlitch } from "./useGlitch";
 interface UseTerminalOptions {
   onSystemCrash?: () => void;
   onSystemRecovery?: () => void;
+  initialDimension?: string;
 }
 
 export function useTerminal(options?: UseTerminalOptions) {
@@ -33,7 +34,7 @@ export function useTerminal(options?: UseTerminalOptions) {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [currentPath, setCurrentPath] = useState<string[]>(["home", "charan"]);
   const [theme, setTheme] = useState("cyan");
-  const [dimension, setDimension] = useState("edex");
+  const [dimension, setDimension] = useState(options?.initialDimension || "edex");
   const [isMelting, setIsMelting] = useState(false);
   const [isTornadoActive, setIsTornadoActive] = useState(false);
   const [isSandboxActive, setIsSandboxActive] = useState(false);
@@ -627,14 +628,20 @@ export function useTerminal(options?: UseTerminalOptions) {
 
   // Load session from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("chterminal_session");
+    if (options?.initialDimension && options.initialDimension !== dimension) {
+      setDimension(options.initialDimension);
+    }
+  }, [options?.initialDimension]);
+
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("chterminal_session") : null;
     if (saved) {
       try {
         const data = JSON.parse(saved);
         if (data.theme) {
           setTimeout(() => setTheme(data.theme), 0);
         }
-        if (data.dimension) {
+        if (data.dimension && !options?.initialDimension) {
           setTimeout(() => setDimension(data.dimension), 0);
         }
         setIsBooting(false);
@@ -642,7 +649,7 @@ export function useTerminal(options?: UseTerminalOptions) {
         // Ignore and boot normally
       }
     }
-  }, [setTheme, setDimension]);
+  }, [setTheme, setDimension, options?.initialDimension]);
 
   // Save session to localStorage when states update
   useEffect(() => {

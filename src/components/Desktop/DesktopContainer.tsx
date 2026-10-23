@@ -111,9 +111,8 @@ export function DesktopContainer() {
       className="w-screen h-screen overflow-hidden flex flex-col bg-black text-[#e4e4e7] select-none relative font-mono text-xs"
       data-theme="blade"
     >
-      {/* Background Orthographic Grid & Subtle Scanlines */}
+      {/* Background Orthographic Grid */}
       <div className="absolute inset-0 edex-grid-bg pointer-events-none z-0" />
-      <div className="scanlines fixed inset-0 pointer-events-none z-40 opacity-10" />
 
       {/* Mobile Tab Switcher (<1024px) */}
       {isMobile && (
@@ -203,7 +202,7 @@ export function DesktopContainer() {
                 <span className="edex-bracket-bl" />
                 <span className="edex-bracket-br" />
                 <div className="flex-1 min-h-0">
-                  <TerminalContainer onStateChange={handleStateChange} />
+                  <TerminalContainer dimension={dimension} onStateChange={handleStateChange} />
                 </div>
               </div>
 
@@ -231,7 +230,7 @@ export function DesktopContainer() {
                   <span className="edex-bracket-tr" />
                   <span className="edex-bracket-bl" />
                   <span className="edex-bracket-br" />
-                  <TerminalContainer onStateChange={handleStateChange} />
+                  <TerminalContainer dimension={dimension} onStateChange={handleStateChange} />
                 </div>
 
                 {/* Mobile Quick Action Chips */}

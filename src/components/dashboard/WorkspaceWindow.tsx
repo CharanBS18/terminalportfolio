@@ -88,8 +88,8 @@ export function WorkspaceWindow({
   } else if (dimension === "1984") {
     containerStyles = "border-2 border-white bg-black text-white rounded-none outline outline-1 outline-white -outline-offset-[5px] font-mono";
   } else {
-    // Authentic eDEX-UI panel: precision borders, dark glass, subtle inner glow
-    containerStyles = `rounded-sm backdrop-blur-md bg-[#030914]/92 border font-mono ${borderClass} signal-glitch-anim`;
+    // Authentic panel: precision borders, dark glass, subtle inner glow
+    containerStyles = `rounded-sm backdrop-blur-md bg-[#030914]/92 border font-mono ${borderClass}`;
   }
 
   // Animation delay style
