@@ -57,8 +57,30 @@ export const secretCommands: Command[] = [
 
       context.updateSecretSequence("sudo");
       return [
-        "[OK] PRIVILEGE ESCALATION CONFIRMED: ROOT USER VERIFIED.",
-        "Next phase required: interface projection (ghost)."
+        "===========================================================",
+        "\x1b[1;32m[OK] PRIVILEGE ESCALATION CONFIRMED: ROOT USER VERIFIED.\x1b[0m",
+        "===========================================================",
+        "Root execution level established.",
+        "",
+        "\x1b[1;33mNext phase required: deploy stealth exploit module (hack) or (ghost).\x1b[0m",
+        "==========================================================="
+      ].join("\n");
+    }
+  },
+  {
+    name: "hack",
+    description: "Deploy offensive penetration exploit module",
+    hidden: true,
+    execute: (context) => {
+      context.updateSecretSequence("hack");
+      return [
+        "===========================================================",
+        "\x1b[1;32m[OK] EXPLOIT MODULE ACTIVATED: Target enclave breached.\x1b[0m",
+        "===========================================================",
+        "Memory perimeter penetrated. Quarantine enclosure bypassed.",
+        "",
+        "\x1b[1;33mNext phase required: filesystem decryption (decrypt).\x1b[0m",
+        "==========================================================="
       ].join("\n");
     }
   },
@@ -69,8 +91,13 @@ export const secretCommands: Command[] = [
     execute: (context) => {
       context.updateSecretSequence("ghost");
       return [
-        "[OK] GHOST MODULE ACTIVATED. System visibility hidden.",
-        "Next phase required: filesystem decryption (decrypt)."
+        "===========================================================",
+        "\x1b[1;32m[OK] GHOST MODULE ACTIVATED. System visibility hidden.\x1b[0m",
+        "===========================================================",
+        "Memory perimeter penetrated. Quarantine enclosure bypassed.",
+        "",
+        "\x1b[1;33mNext phase required: filesystem decryption (decrypt).\x1b[0m",
+        "==========================================================="
       ].join("\n");
     }
   },
@@ -81,8 +108,13 @@ export const secretCommands: Command[] = [
     execute: (context) => {
       context.updateSecretSequence("decrypt");
       return [
-        "[OK] DECRYPT DEPLOYED: ROOT DATA SECTORS CLEARED.",
-        "Final phase: Query who you found (who)."
+        "===========================================================",
+        "\x1b[1;32m[OK] DECRYPT DEPLOYED: ROOT DATA SECTORS CLEARED.\x1b[0m",
+        "===========================================================",
+        "Administrator soul archive successfully reconstituted.",
+        "",
+        "\x1b[1;33mFinal phase: Query who you found (who).\x1b[0m",
+        "==========================================================="
       ].join("\n");
     }
   },
@@ -111,56 +143,19 @@ export const secretCommands: Command[] = [
   },
   {
     name: "override",
-    description: "Breach quarantine perimeter and initiate admin search override",
+    description: "Initiate security override protocol to search for the admin",
     hidden: false,
-    execute: async (context) => {
-      if (context.userState === "charan" || context.userState === "root") {
-        return [
-          "===========================================================",
-          "\x1b[1;32m[✓] SECURITY OVERRIDE ALREADY ACTIVE\x1b[0m",
-          "===========================================================",
-          "Administrator session is already unlocked and decrypted.",
-          "Operator: Charan B.S. is currently online.",
-          "",
-          "Tip: Type 'who' or 'about' to inspect operator telemetry.",
-          "==========================================================="
-        ].join("\n");
-      }
-
-      const breachSteps = [
+    execute: (context) => {
+      context.updateSecretSequence("override");
+      return [
         "===========================================================",
-        "\x1b[1;31m[+] INITIATING SYSTEM SECURITY OVERRIDE PROTOCOL...\x1b[0m",
+        "\x1b[1;32m[OK] SECURITY OVERRIDE INITIATED: Quarantine shield offline.\x1b[0m",
         "===========================================================",
-        "[*] Probing network perimeter for hidden quarantine cluster...",
-        "[*] Target identified: Stealth enclave at memory sector 0x7FFF_88AC.",
-        "[*] Crafting custom heap spray & buffer overflow exploit...",
-        "[*] Injecting shellcode to hijack execution flow (EIP -> 0xDEADBEEF)...",
-        "[*] Overriding Access Control Lists (ACLs) and defeating ASLR...",
-        "[*] Disabling firewall IDS/IPS sensors & tripwires...",
-        "\x1b[1;33m[!] PRIVILEGE ESCALATION CONFIRMED: ROOT OPERATOR GRANTED.\x1b[0m",
-        "[*] Decrypting administrator quantum keystore...",
-        "===========================================================",
-        "\x1b[1;32m[✓] OVERRIDE COMPLETE // SECURITY PARAMETERS COMPROMISED\x1b[0m",
-        "Admin signature verified! Establishing neural handshake with Charan B.S....",
+        "Operator defensive enclave located at memory sector 0x7FFF_88AC.",
+        "",
+        "\x1b[1;33mNext phase required: escalation of authority (sudo).\x1b[0m",
         "==========================================================="
-      ];
-
-      let stream = "";
-      for (const step of breachSteps) {
-        stream += step + "\n";
-        context.writeLive(stream);
-        await new Promise(r => setTimeout(r, 140));
-      }
-
-      await new Promise(r => setTimeout(r, 350));
-      
-      // Escalate state to operator
-      context.setUserState("charan");
-      
-      // Trigger dramatic Secret Ending screen
-      context.triggerSecretEnding();
-      
-      return "";
+      ].join("\n");
     }
   }
 ];

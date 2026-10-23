@@ -62,17 +62,23 @@ export function useTerminal(options?: UseTerminalOptions) {
 
   const updateSecretSequence = useCallback((cmd: string) => {
     setSecretSequence((prev) => {
-      const sequence = ["unlock", "sudo", "ghost", "decrypt"];
+      const stepGroups: string[][] = [
+        ["unlock", "override"],
+        ["sudo"],
+        ["ghost", "hack"],
+        ["decrypt"]
+      ];
       const nextIdx = prev.length;
       
-      if (sequence[nextIdx] === cmd) {
+      if (nextIdx < stepGroups.length && stepGroups[nextIdx].includes(cmd)) {
         const nextSeq = [...prev, cmd];
         playBeep(600, 0.08, false);
         return nextSeq;
       }
       
-      if (cmd === "unlock") {
-        return ["unlock"];
+      if (stepGroups[0].includes(cmd)) {
+        playBeep(600, 0.08, false);
+        return [cmd];
       }
       return [];
     });
@@ -372,8 +378,8 @@ export function useTerminal(options?: UseTerminalOptions) {
       return;
     }
 
-    // Check secret ending trigger (unlock -> sudo -> ghost -> decrypt -> who)
-    if (commandName === "who" && secretSequence.length === 4) {
+    // Check secret ending trigger (unlock/override -> sudo -> ghost/hack -> decrypt -> who/about)
+    if ((commandName === "who" || commandName === "about") && secretSequence.length === 4) {
       setUserState("charan");
       setIsSecretEndingActive(true);
       setInput("");
@@ -500,7 +506,7 @@ export function useTerminal(options?: UseTerminalOptions) {
         }
       }
       if (current === "guest" || current === "visitor" || current === "developer") {
-        if (["unlock", "sudo", "ghost", "decrypt"].includes(commandName) || secretSequence.length > 0) {
+        if (["unlock", "override", "sudo", "ghost", "hack", "decrypt"].includes(commandName) || secretSequence.length > 0) {
           return "root";
         }
       }
