@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useTerminalEvent } from "@/hooks/useTerminalEvent";
 
 interface Node {
   x: number;
@@ -11,16 +10,12 @@ interface Node {
   radius: number;
 }
 
-interface NetworkWidgetProps {
-  themeColor?: string;
-  className?: string;
-}
-
-export function NetworkWidget({ themeColor = "cyan", className = "" }: NetworkWidgetProps) {
+export function NetworkWidget({ themeColor = "cyan" }: { themeColor?: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [bandwidthHistory, setBandwidthHistory] = useState<number[]>(Array(30).fill(25));
   const [trafficRate, setTrafficRate] = useState(5.4);
   const packetStormRef = useRef(false);
+  const { useTerminalEvent } = require("@/hooks/useTerminalEvent");
 
   useTerminalEvent((detail: { command: string }) => {
     const { command } = detail;
@@ -207,56 +202,37 @@ export function NetworkWidget({ themeColor = "cyan", className = "" }: NetworkWi
   const fillPoints = `0,100 ${points} 100,100`;
 
   return (
-    <div className={`edex-panel select-none overflow-hidden flex flex-col font-mono text-zinc-300 ${className}`}>
-      {/* Corner Brackets */}
-      <span className="edex-bracket-tl" />
-      <span className="edex-bracket-tr" />
-      <span className="edex-bracket-bl" />
-      <span className="edex-bracket-br" />
-
-      {/* Header telemetry strip */}
-      <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1 flex items-center justify-between text-[10px] shrink-0">
-        <div className="flex items-center space-x-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_4px_#00f0ff]" />
-          <span className="font-bold tracking-widest text-cyan-200 uppercase">
-            [ NETWORK_TELEMETRY // TRAFFIC_IO ]
-          </span>
-        </div>
-        <div className="flex items-center space-x-2 text-[9px] text-cyan-400/80">
-          <span>{trafficRate} MB/s</span>
-          <span className="text-zinc-600">|</span>
-          <span className="text-emerald-400 font-bold">14ms PING</span>
-        </div>
-      </div>
-
+    <div className="w-full h-full flex flex-col font-mono select-none bg-zinc-950/20 divide-y divide-white/5">
       {/* Node Canvas Viewport */}
-      <div className="flex-1 relative min-h-0 bg-[#070709]/40 overflow-hidden">
+      <div className="flex-1 relative min-h-0 bg-[#070709]/40">
         <canvas ref={canvasRef} className="w-full h-full" />
-        <div className="absolute top-1.5 left-2 text-[8px] text-cyan-400/70 uppercase tracking-widest pointer-events-none bg-black/60 px-1 py-0.2 border border-cyan-500/20 rounded-xs">
-          ETH0: 192.168.1.102 // GATEWAY: 192.168.1.1
+        <div className="absolute top-2 left-3 text-[9px] text-zinc-500 uppercase tracking-widest pointer-events-none">
+          Packets Flow Router // Active Nodes: 18
         </div>
       </div>
 
       {/* Bandwidth Monitor Graph */}
-      <div className="h-[75px] p-2 flex flex-col shrink-0 bg-black/50 border-t border-cyan-500/15">
-        <div className="flex justify-between items-center text-[8px] text-zinc-400 mb-1 uppercase font-bold">
-          <span className="text-cyan-300">IO BANDWIDTH SPECTRUM</span>
-          <span className="text-cyan-200 font-mono">RX: {(trafficRate * 0.75).toFixed(1)}M / TX: {(trafficRate * 0.25).toFixed(1)}M</span>
+      <div className="h-[95px] p-3 flex flex-col shrink-0 bg-black/40">
+        <div className="flex justify-between items-center text-[9px] text-zinc-500 mb-1.5 uppercase">
+          <span>Bandwidth Tracker</span>
+          <span className={`font-bold ${themeColor === 'white' ? 'text-white' : `text-${themeColor}-400`}`}>
+            {trafficRate} MB/s
+          </span>
         </div>
 
         <div className="flex-1 min-h-0 relative">
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <defs>
               <linearGradient id={`net-glow-${themeColor}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#00f0ff" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#00f0ff" stopOpacity="0" />
+                <stop offset="0%" stopColor={`rgba(${themeColor === 'green' ? '16, 185, 129' : themeColor === 'purple' ? '217, 70, 239' : themeColor === 'amber' ? '245, 158, 11' : themeColor === 'red' ? '239, 68, 68' : themeColor === 'white' ? '255, 255, 255' : '6, 182, 212'}, 0.25)`} />
+                <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
               </linearGradient>
             </defs>
 
-            {/* Grid helper lines */}
-            <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(0,240,255,0.08)" strokeWidth="0.5" />
-            <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(0,240,255,0.08)" strokeWidth="0.5" />
-            <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(0,240,255,0.08)" strokeWidth="0.5" />
+            {/* Grid helper lines inside chart */}
+            <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(255,255,255,0.03)" strokeWidth="0.5" />
+            <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(255,255,255,0.03)" strokeWidth="0.5" />
+            <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(255,255,255,0.03)" strokeWidth="0.5" />
 
             {/* Filled area */}
             <polygon
@@ -267,23 +243,12 @@ export function NetworkWidget({ themeColor = "cyan", className = "" }: NetworkWi
             {/* Plot stroke line */}
             <polyline
               fill="none"
-              stroke="#00f0ff"
+              stroke={themeColor === 'green' ? '#10b981' : themeColor === 'purple' ? '#d946ef' : themeColor === 'amber' ? '#f59e0b' : themeColor === 'red' ? '#ef4444' : themeColor === 'white' ? '#ffffff' : '#06b6d4'}
               strokeWidth="1.5"
               points={points}
             />
           </svg>
         </div>
-      </div>
-
-      {/* Open Listening Ports Footer */}
-      <div className="bg-[#030914] border-t border-cyan-500/15 px-2.5 py-1 flex items-center justify-between text-[8px] text-zinc-400 shrink-0">
-        <span className="text-zinc-500">PORTS:</span>
-        <div className="flex items-center gap-1.5 font-mono text-[7px]">
-          <span className="px-1 py-0.2 rounded-xs bg-cyan-950/40 border border-cyan-500/30 text-cyan-300">3000:HTTP</span>
-          <span className="px-1 py-0.2 rounded-xs bg-cyan-950/40 border border-cyan-500/30 text-cyan-300">22:SSH</span>
-          <span className="px-1 py-0.2 rounded-xs bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">443:TLS</span>
-        </div>
-        <span className="text-emerald-400 font-bold">1000M/FDX</span>
       </div>
     </div>
   );

@@ -28,7 +28,6 @@ interface TerminalContainerProps {
   onHeaderPointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
   theme?: string;
   setTheme?: (theme: string) => void;
-  dimension?: string;
 }
 
 export function TerminalContainer({
@@ -41,18 +40,15 @@ export function TerminalContainer({
   onStateChange,
   onHeaderPointerDown,
   theme: propTheme,
-  setTheme: propSetTheme,
-  dimension: propDimension
+  setTheme: propSetTheme
 }: TerminalContainerProps) {
   const terminalData = useTerminal({
     onSystemCrash,
-    onSystemRecovery,
-    initialDimension: propDimension
+    onSystemRecovery
   });
 
   const theme = propTheme !== undefined ? propTheme : terminalData.theme;
   const setTheme = propSetTheme !== undefined ? propSetTheme : terminalData.setTheme;
-  const dimension = propDimension !== undefined ? propDimension : terminalData.dimension;
 
   const {
     input,
@@ -81,7 +77,7 @@ export function TerminalContainer({
     isExecuting,
     triggerClear,
     secretSequence,
-    dimension: hookDimension,
+    dimension,
     isMelting,
     isTornadoActive,
     isSandboxActive
@@ -95,13 +91,13 @@ export function TerminalContainer({
     onStateChange?.({ 
       userState, 
       secretSequenceLength: secretSequence.length,
-      dimension: hookDimension,
+      dimension,
       isMelting,
       isTornadoActive,
       isSandboxActive,
       theme: terminalData.theme
     });
-  }, [userState, secretSequence, hookDimension, isMelting, isTornadoActive, isSandboxActive, terminalData.theme, onStateChange]);
+  }, [userState, secretSequence, dimension, isMelting, isTornadoActive, isSandboxActive, terminalData.theme, onStateChange]);
 
   // Scroll to bottom on history change
   useEffect(() => {
@@ -199,21 +195,11 @@ export function TerminalContainer({
       {/* Background scanline filters */}
       <div className="scanlines z-10 pointer-events-none" />
       
-      {/* eDEX-UI Corner Brackets */}
-      {dimension === "edex" && (
-        <>
-          <span className="edex-bracket-tl" />
-          <span className="edex-bracket-tr" />
-          <span className="edex-bracket-bl" />
-          <span className="edex-bracket-br" />
-        </>
-      )}
-
       {/* Matrix rain and Secret ending overlays */}
       {isMatrixActive && <MatrixRain onClose={() => setIsMatrixActive(false)} />}
       {isSecretEndingActive && <SecretEnding onClose={() => setIsSecretEndingActive(false)} />}
 
-      {/* macOS / Dimension / eDEX-UI Header */}
+      {/* macOS Traffic Lights Header */}
       {dimension === "1995" ? (
         /* Windows 95 Title Bar */
         <div 
@@ -275,62 +261,8 @@ export function TerminalContainer({
             Terminal
           </div>
         </div>
-      ) : dimension === "edex" ? (
-        /* eDEX-UI High-Tech HUD Terminal Header matching reference 1 & 3 */
-        <div 
-          onPointerDown={(e) => {
-            const target = e.target as HTMLElement;
-            if (target.closest("button") || target.closest("input")) return;
-            onHeaderPointerDown?.(e);
-          }}
-          className="px-3 py-1.5 flex items-center justify-between border-b select-none shrink-0 font-mono text-[10px] bg-[#0e0e13] text-zinc-300 border-b-white/10"
-        >
-          {/* Left Title */}
-          <span className="font-bold tracking-wider text-zinc-400 uppercase">
-            TERMINAL
-          </span>
-
-          {/* Center Tabs */}
-          <div className="flex items-center space-x-1">
-            <span className="px-2 py-0.5 bg-white/10 border border-white/20 text-white font-bold rounded-xs tracking-wide">
-              MAIN - zsh
-            </span>
-            <span className="hidden sm:inline px-2 py-0.5 text-zinc-600 tracking-wider">
-              EMPTY
-            </span>
-            <span className="hidden md:inline px-2 py-0.5 text-zinc-600 tracking-wider">
-              EMPTY
-            </span>
-            <span className="hidden lg:inline px-2 py-0.5 text-zinc-600 tracking-wider">
-              EMPTY
-            </span>
-            <span className="hidden xl:inline px-2 py-0.5 text-zinc-600 tracking-wider">
-              EMPTY
-            </span>
-          </div>
-
-          {/* Right Shell Tag & Actions */}
-          <div className="flex items-center space-x-2 shrink-0">
-            <span className="hidden sm:inline text-zinc-500 tracking-wider uppercase text-[9px]">
-              MAIN SHELL
-            </span>
-
-            {/* Clear Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                playBeep(440, 0.05);
-                triggerClear();
-              }}
-              className="px-1.5 py-0.5 text-[8px] font-mono text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-white/10 rounded-xs transition-colors cursor-pointer"
-              title="Clear terminal buffer"
-            >
-              CLEAR
-            </button>
-          </div>
-        </div>
       ) : (
-        /* Default macOS style header (for 2026, 2099, and classic modes) */
+        /* Default macOS style header (for 2026 and 2099) */
         <div 
           onPointerDown={(e) => {
             const target = e.target as HTMLElement;
@@ -386,30 +318,16 @@ export function TerminalContainer({
         </div>
       )}
 
-      {/* Scrollable Viewport - Pure Black eDEX background */}
-      <section className="flex-1 overflow-y-auto p-4 pr-3 edex-scrollbar select-text min-h-0 bg-black text-[#e4e4e7]">
+      {/* Scrollable Viewport */}
+      <section className="flex-1 overflow-y-auto p-4 pr-3 terminal-scrollbar select-text min-h-0">
         <div className="w-full">
-          {/* eDEX-UI Welcome Header Card */}
-          <div className="mb-5 font-mono text-xs leading-relaxed select-none border border-white/10 bg-zinc-950/80 p-3 rounded-xs relative">
-            <span className="edex-bracket-tl" />
-            <span className="edex-bracket-br" />
-            <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-white/10 text-[10px]">
-              <span className="text-zinc-200 font-bold tracking-widest uppercase flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                eDEX-UI // SECURE SHELL [HOST: PORTFOLIO]
-              </span>
-              <span className="text-zinc-500 hidden sm:inline">AUTH: LEVEL-5 ROOT // SESSION: TTY-1</span>
-            </div>
-            <p className="text-white font-bold text-sm mb-1">
-              CHARAN B S — OFFENSIVE SECURITY & PENETRATION TESTING
+          {/* Welcome Header */}
+          <div className="mb-6 font-mono text-sm leading-relaxed select-none opacity-80 border-b border-zinc-800/40 pb-4">
+            <p className="text-lg font-bold text-[var(--term-fg)] drop-shadow-[0_0_8px_var(--term-glow)] mb-1">
+              SYSTEM HOST LOGGED: UNKNOWN NODE
             </p>
-            <p className="text-zinc-400 text-xs">
-              Type <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">help</span> to scan available instructions, or run <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">projects</span>, <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">skills</span>, <span className="text-zinc-100 font-bold bg-white/10 px-1 py-0.5 rounded border border-white/20">contact</span>.
-            </p>
-            <div className="flex items-center justify-between text-[9px] text-zinc-500 pt-1.5 mt-2 border-t border-white/5">
-              <span>LINK: SECURE [AES-256]</span>
-              <span>SHELL HIST: {commandHistoryCount} COMMANDS</span>
-            </div>
+            <p>Type <span className="text-[var(--term-fg)] font-bold bg-[var(--term-dim)]/20 px-1 py-0.5 rounded">help</span> to scan available instructions.</p>
+            <p className="text-xs text-[var(--term-dim)] mt-1">Terminal connection: SECURED // Shell history count: {commandHistoryCount}</p>
           </div>
 
           {/* Historical command feed */}
@@ -431,49 +349,49 @@ export function TerminalContainer({
       </section>
 
       {/* Footer Virtual Keys */}
-      <footer className="border-t border-cyan-500/20 bg-[#030916]/95 px-3 py-2 select-none flex flex-col sm:flex-row items-center justify-between font-mono text-[9px] text-cyan-300/80 gap-2 shrink-0">
-        <div className="flex items-center space-x-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse drop-shadow-[0_0_4px_#34d399]" />
-          <span className="font-semibold tracking-wider text-cyan-200">GRID LINK: STABLE // OPERATOR ACTIVE</span>
+      <footer className="border-t border-zinc-800 bg-[#0c0c0e]/95 px-4 py-3 select-none flex flex-col sm:flex-row items-center justify-between font-mono text-[9px] text-[var(--term-dim)] gap-3 shrink-0">
+        <div className="flex items-center space-x-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping" />
+          <span>GRID LINK: STABLE // OPERATOR ACTIVE</span>
         </div>
 
         {/* Virtual Quick Keys */}
-        <div className="flex flex-wrap items-center justify-center gap-1 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 w-full sm:w-auto">
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("CLR"); }}
-            className="px-2.5 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer font-bold"
+            className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
           >
             CLR
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("UP"); }}
-            className="px-2 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer"
+            className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
           >
             ▲
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("DOWN"); }}
-            className="px-2 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer"
+            className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
           >
             ▼
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("TAB"); }}
-            className="px-3 py-0.5 bg-cyan-950/30 hover:bg-cyan-500/20 text-cyan-300 hover:text-white border border-cyan-500/30 rounded-xs transition-colors cursor-pointer font-bold"
+            className="px-3.5 py-1 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-500 active:text-black border border-zinc-700 rounded transition-colors cursor-pointer"
           >
             TAB
           </button>
           {(isMatrixActive || isSecretEndingActive) && (
             <button
               onClick={(e) => { e.stopPropagation(); triggerMobileKey("ESC"); }}
-              className="px-2.5 py-0.5 bg-red-950/30 hover:bg-red-500/30 text-red-400 hover:text-red-100 border border-red-500/40 rounded-xs transition-colors cursor-pointer font-bold"
+              className="px-2.5 py-1 bg-red-950/20 active:bg-red-500 active:text-black border border-red-500/30 text-red-400 rounded transition-colors cursor-pointer"
             >
               ESC
             </button>
           )}
           <button
             onClick={(e) => { e.stopPropagation(); triggerMobileKey("ENTER"); }}
-            className="px-3.5 py-0.5 bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-200 hover:text-white border border-cyan-400 font-bold rounded-xs transition-colors cursor-pointer shadow-[0_0_8px_rgba(0,240,255,0.3)]"
+            className="px-3.5 py-1 bg-cyan-950/30 active:bg-cyan-400 active:text-black border border-cyan-400 text-cyan-400 font-bold rounded transition-colors cursor-pointer"
           >
             RUN
           </button>

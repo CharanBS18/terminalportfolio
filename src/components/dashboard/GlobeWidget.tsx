@@ -36,12 +36,7 @@ const defaultConnections: Connection[] = [
   { from: 6, to: 7 }  // São Paulo -> Cairo
 ];
 
-interface GlobeWidgetProps {
-  themeColor?: string;
-  className?: string;
-}
-
-export function GlobeWidget({ themeColor = "cyan", className = "" }: GlobeWidgetProps) {
+export function GlobeWidget({ themeColor = "cyan" }: { themeColor?: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -307,45 +302,14 @@ export function GlobeWidget({ themeColor = "cyan", className = "" }: GlobeWidget
   }, [themeColor]);
 
   return (
-    <div className={`edex-panel select-none overflow-hidden flex flex-col font-mono text-zinc-300 ${className}`}>
-      {/* Corner Brackets */}
-      <span className="edex-bracket-tl" />
-      <span className="edex-bracket-tr" />
-      <span className="edex-bracket-bl" />
-      <span className="edex-bracket-br" />
-
-      {/* Header telemetry strip */}
-      <div className="bg-[#040e1f]/95 border-b border-cyan-500/20 px-3 py-1 flex items-center justify-between text-[10px] shrink-0">
-        <div className="flex items-center space-x-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse drop-shadow-[0_0_4px_#00f0ff]" />
-          <span className="font-bold tracking-widest text-cyan-200 uppercase">
-            [ GEOSPATIAL_ORBIT // SAT_TRACK ]
-          </span>
-        </div>
-        <div className="flex items-center space-x-2 text-[9px] text-cyan-400/80">
-          <span>8 NODES</span>
-          <span className="text-zinc-600">|</span>
-          <span className="text-emerald-400 font-bold">LOCK: OK</span>
-        </div>
+    <div className="w-full h-full relative overflow-hidden flex items-center justify-center bg-zinc-950/20">
+      <canvas ref={canvasRef} className="w-full h-full object-cover" />
+      {/* HUD Info Overlays */}
+      <div className="absolute top-2 left-3 font-mono text-[8px] text-zinc-500 uppercase tracking-widest pointer-events-none select-none">
+        Sat Link [Active] // NOD_C: 8
       </div>
-
-      {/* Canvas Viewport */}
-      <div className="flex-1 relative overflow-hidden flex items-center justify-center bg-black/40 min-h-0">
-        <canvas ref={canvasRef} className="w-full h-full object-cover" />
-        
-        {/* HUD Info Overlays */}
-        <div className="absolute top-2 left-2.5 font-mono text-[8px] text-cyan-400/80 uppercase tracking-widest pointer-events-none select-none bg-black/60 px-1.5 py-0.5 border border-cyan-500/20 rounded-xs">
-          ORBIT: ISS // ALT: 408 KM
-        </div>
-        <div className="absolute bottom-2 right-2.5 font-mono text-[8px] text-cyan-300 uppercase pointer-events-none select-none bg-black/60 px-1.5 py-0.5 border border-cyan-500/20 rounded-xs">
-          12.9716° N, 77.5946° E [BLR]
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-[#030914] border-t border-cyan-500/15 px-2.5 py-0.5 flex items-center justify-between text-[8px] text-zinc-500 shrink-0">
-        <span>EARTH_PROJECTION: WGS84</span>
-        <span className="text-cyan-400/80">TELEMETRY: LIVE</span>
+      <div className="absolute bottom-2 right-3 font-mono text-[8px] text-zinc-500 uppercase pointer-events-none select-none">
+        Dec: +37.7749° // Ra: 12h 45m
       </div>
     </div>
   );

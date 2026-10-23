@@ -60,17 +60,15 @@ export function TerminalInput({
   return (
     <div className="flex items-center space-x-1.5 font-mono text-sm leading-relaxed mt-2 select-none relative">
       {/* Prompt Prefix */}
-      <span className={`font-bold transition-colors duration-200 font-mono tracking-tight ${
-        glitchPrompt ? 'text-red-500 animate-pulse' : 'text-zinc-200'
-      }`}>
+      <span className={`font-bold transition-colors duration-200 ${glitchPrompt ? 'text-red-500 animate-pulse' : 'text-[var(--term-fg)]'}`}>
         {username}@{hostname}
       </span>
-      <span className="text-zinc-500">:</span>
-      <span className="text-zinc-300 font-bold transition-all">{dirStr}</span>
-      <span className="text-white font-bold mr-1">$</span>
+      <span className="text-[var(--term-dim)]">:</span>
+      <span className="text-cyan-400 font-bold transition-all">{dirStr}</span>
+      <span className="text-[var(--term-fg)] font-bold">$</span>
 
       {/* Hidden input taking up cursor focus */}
-      <div className="flex-1 relative flex items-center min-w-[100px] font-semibold break-all whitespace-pre-wrap text-white font-mono">
+      <div className="flex-1 relative flex items-center min-w-[100px] font-semibold break-all whitespace-pre-wrap text-[var(--term-fg)]">
         <input
           ref={inputRef}
           type="text"
@@ -93,13 +91,13 @@ export function TerminalInput({
         />
         
         {/* Render text before the cursor */}
-        <span className="text-white selection:bg-white/30 selection:text-white">{before}</span>
+        <span>{before}</span>
         
-        {/* eDEX-UI Crisp White Block Cursor */}
-        <span className="inline-block w-2 h-4 bg-white shadow-[0_0_6px_#ffffff] align-middle shrink-0 select-none mx-[0.5px] animate-[blink_1s_infinite] opacity-95" />
+        {/* Simple thin vertical line blinking cursor */}
+        <span className="inline-block w-[1.5px] h-4 bg-[var(--term-cursor)] shadow-[0_0_4px_var(--term-cursor)] align-middle shrink-0 select-none mx-[0.5px] animate-[blink_1s_infinite]" />
 
         {/* Render text after the cursor */}
-        <span className="text-white selection:bg-white/30 selection:text-white">{after}</span>
+        <span>{after}</span>
       </div>
 
       <style jsx global>{`

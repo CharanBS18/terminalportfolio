@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useTerminalEvent } from "@/hooks/useTerminalEvent";
 
 export function AIStatusWidget({ themeColor = "cyan" }: { themeColor?: string }) {
   const [metrics, setMetrics] = useState({
@@ -38,6 +37,8 @@ export function AIStatusWidget({ themeColor = "cyan" }: { themeColor?: string })
 
     return () => clearInterval(interval);
   }, []);
+
+  const { useTerminalEvent } = require("@/hooks/useTerminalEvent");
 
   useTerminalEvent((detail: { command: string }) => {
     const { command } = detail;

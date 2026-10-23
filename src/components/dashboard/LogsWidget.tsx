@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useTerminalEvent } from "@/hooks/useTerminalEvent";
 
 const logPool = [
   "Node connected",
@@ -26,6 +25,8 @@ export function LogsWidget({ themeColor = "cyan" }: { themeColor?: string }) {
     "monitoring network activity..."
   ]);
   const logsEndRef = useRef<HTMLDivElement | null>(null);
+
+  const { useTerminalEvent } = require("@/hooks/useTerminalEvent");
 
   useTerminalEvent((detail: { command: string; timestamp: string }) => {
     const { command, timestamp } = detail;

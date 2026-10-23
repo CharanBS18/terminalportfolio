@@ -55,7 +55,6 @@ const generateHelpText = (commands: Command[]) => {
       lines.push(`  ${formatName(name)} ${description}`);
     });
     if (category === "FUN") {
-      lines.push("  dimension       ➔ Roll back to classic desktop or switch to eDEX-UI");
       lines.push("  dimension 1995  ➔ Warp to retro Windows 95 Taskbar & Start Menu");
       lines.push("  melt            ➔ Overclock processor cores and melt display");
       lines.push("  tornado         ➔ Spin the entire operating system into a vortex");
@@ -299,7 +298,7 @@ DATA BREACH CODE: 0xDEADBEEF
         cd: `NAME\n    cd - Change working directory path\n\nSYNOPSIS\n    cd [path]\n\nDESCRIPTION\n    Changes the shell path position. Entering '/root' requires root access.`,
         cat: `NAME\n    cat - Read text files\n\nSYNOPSIS\n    cat [filename]\n\nDESCRIPTION\n    Prints the contents of the target text file. Reading dot-files requires root access.`,
         neofetch: `NAME\n    neofetch - Display system summary details\n\nSYNOPSIS\n    neofetch\n\nDESCRIPTION\n    Draws a responsive ASCII display card detailing user profile and skills.`,
-        dimension: `NAME\n    dimension - Warp shell display dimensions across computing timelines\n\nSYNOPSIS\n    dimension [edex|2026|1995|1984|2099]\n\nDESCRIPTION\n    Warp the visual interface layout between eDEX-UI cockpit and classic computing history:\n    * edex: Authentic full-screen eDEX-UI sci-fi cockpit with live telemetry, 3D globe, and HUD keyboard\n    * 2026: Original classic macOS dark glass desktop with Dock and floating interactive windows\n    * 1995: Classic Windows 95 Desktop with Start Menu & Taskbar\n    * 1984: Apple Macintosh System 1 Flat 1-bit monochrome GUI\n    * 2099: Cyberpunk 3D perspective holographic overlay\n\n    Running 'dimension' without arguments automatically rolls back to the oldest classic design.`,
+        dimension: `NAME\n    dimension - Warp shell display dimensions across computing timelines\n\nSYNOPSIS\n    dimension [1984|1995|2026|2099]\n\nDESCRIPTION\n    Warp the visual interface layout, borders, backgrounds, and Docks into classic configurations from computing history:\n    * 1984: Apple Macintosh System 1 Flat 1-bit monochrome GUI\n    * 1995: Classic Windows 95 Desktop with Start Menu & Taskbar\n    * 2026: Modern macOS dark Pikachu glass layout\n    * 2099: Cyberpunk 3D perspective holographic overlay`,
         melt: `NAME\n    melt - Overclock system processor core thermal limits\n\nSYNOPSIS\n    melt\n\nDESCRIPTION\n    Triggers CPU overclock alarms. The terminal display liquid-collapses under gravity using a canvas physics engine, followed by a thermal overload warning BIOS reboot.`,
         overclock: `NAME\n    overclock - Overclock system processor core thermal limits\n\nSYNOPSIS\n    overclock\n\nDESCRIPTION\n    Alias for the 'melt' command. Initiates CPU core overclock and screen collapse.`,
         tornado: `NAME\n    tornado - Meteorological viewport vortex spin\n\nSYNOPSIS\n    tornado\n\nDESCRIPTION\n    Triggers a 10-second meteorological anomaly spinning the entire website UI off the screen in a vortex before restoring normal state.`,
@@ -338,44 +337,25 @@ DATA BREACH CODE: 0xDEADBEEF
   },
   {
     name: "dimension",
-    description: "Roll back to classic desktop or warp across computing timelines",
+    description: "Warp terminal display dimensions across computing timelines",
     execute: (context) => {
       const choice = context.args[0];
-      const validDimensions = ["edex", "2026", "1995", "1984", "2099", "classic", "retro", "oldest"];
+      const dimensions = ["1984", "1995", "2026", "2099"];
+      if (!choice) {
+        return `Usage: dimension [year]\nAvailable dimensions: ${dimensions.join(", ")}`;
+      }
+
+      const selected = choice.toLowerCase();
+      if (!dimensions.includes(selected)) {
+        return `Unknown dimension: ${choice}. Choose from: ${dimensions.join(", ")}`;
+      }
 
       if (typeof context.setDimension !== "function") {
         return "System error: setDimension not found. Please refresh your browser tab.";
       }
 
-      // If user runs 'dimension' with no arguments:
-      if (!choice) {
-        if (context.dimension === "edex") {
-          context.setDimension("2026");
-          return "Rolling back to the classic desktop dimension (macOS dark glass with Dock & floating windows)...\nType 'dimension edex' to return to eDEX-UI.";
-        } else {
-          context.setDimension("edex");
-          return "Warping to the authentic eDEX-UI sci-fi cockpit dimension...\nType 'dimension' to roll back to classic desktop.";
-        }
-      }
-
-      const selected = choice.toLowerCase();
-      if (!validDimensions.includes(selected)) {
-        return `Unknown dimension: ${choice}.\nAvailable dimensions: edex, 2026, 1995, 1984, 2099 (or run 'dimension' to toggle)`;
-      }
-
-      let target = selected;
-      if (selected === "classic" || selected === "retro" || selected === "oldest") {
-        target = "2026";
-      }
-
-      context.setDimension(target);
-      if (target === "edex") {
-        return "Initializing authentic eDEX-UI sci-fi cockpit dimension...";
-      } else if (target === "2026") {
-        return "Rolling back to the classic computing dimension [Year 2026 - macOS Dark Glass Desktop & Dock]...\nType 'dimension edex' to return to eDEX-UI.";
-      } else {
-        return `Initializing dimension warp protocols... warping to year [${target}]`;
-      }
+      context.setDimension(selected);
+      return `Initializing dimension warp protocols... warping to year [${selected}]`;
     }
   },
   {
