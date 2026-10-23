@@ -312,12 +312,13 @@ export const portfolioCommands: Command[] = [
         "===========================================================",
         "CONTACT ARCHIVES",
         "===========================================================",
-        `  Email:     ${PORTFOLIO_DATA.contacts.email}`,
-        `  LinkedIn:  ${PORTFOLIO_DATA.contacts.linkedin}`,
-        `  GitHub:    ${PORTFOLIO_DATA.contacts.github}`,
-        `  Portfolio: ${PORTFOLIO_DATA.contacts.portfolio}`,
+        `  Email:      ${PORTFOLIO_DATA.contacts.email}`,
+        `  LinkedIn:   ${PORTFOLIO_DATA.contacts.linkedin}`,
+        `  GitHub:     ${PORTFOLIO_DATA.contacts.github}`,
+        `  TryHackMe:  ${PORTFOLIO_DATA.contacts.tryhackme}`,
+        `  Portfolio:  ${PORTFOLIO_DATA.contacts.portfolio}`,
         "-----------------------------------------------------------",
-        "Tip: Type the platform name directly (e.g. 'github') to open link.",
+        "Tip: Type the platform name directly (e.g. 'tryhackme', 'github') to open link or desktop window.",
         "==========================================================="
       ].join("\n");
     }
@@ -333,9 +334,70 @@ export const portfolioCommands: Command[] = [
         `| Email      | ${PORTFOLIO_DATA.contacts.email.padEnd(43, " ")} |`,
         `| LinkedIn   | ${PORTFOLIO_DATA.contacts.linkedin.padEnd(43, " ")} |`,
         `| GitHub     | ${PORTFOLIO_DATA.contacts.github.padEnd(43, " ")} |`,
+        `| TryHackMe  | ${PORTFOLIO_DATA.contacts.tryhackme.padEnd(43, " ")} |`,
         "+------------+---------------------------------------------+",
-        "Tip: You can use the 'open contact.txt' command to inspect."
+        "Tip: Type 'tryhackme' to open the interactive Security Labs Hub."
       ].join("\n");
+    }
+  },
+  {
+    name: "tryhackme",
+    description: "Open TryHackMe & Security Labs Hub displaying all solved rooms",
+    execute: async (context) => {
+      const banner = [
+        "===========================================================",
+        "\x1b[1;31m[⚡] TRYHACKME & OFFENSIVE SECURITY LABS HUB\x1b[0m",
+        "===========================================================",
+        `Operator:         charanbs (@charanbs)`,
+        `Official Profile: ${PORTFOLIO_DATA.contacts.tryhackme}`,
+        `Platforms:        TryHackMe, PortSwigger Web Security, LabEx.io, Local VMs`,
+        `Status:           Online // 12+ Rooms & Exploits Audited`,
+        "",
+        "FEATURED ATTACK CHAINS & LABS:",
+        "  * Chaining Vulnerabilities (TryHackMe) -> Stored XSS to Admin Takeover",
+        "  * SQLi UNION & Blind Exploits (PortSwigger) -> DB Credential Exfiltration",
+        "  * Linux Privilege Escalation (TryHackMe) -> SUID / GTFOBins Root Shell",
+        "  * JWT Auth & Signature Bypass (PortSwigger) -> Admin Claim Forgery",
+        "  * NetGuard AI Wireless Sandbox (Local VM) -> EvilTwin & Beacon Sniffing",
+        "",
+        "\x1b[1;32m[✓] Launching interactive Security Labs window on your desktop...\x1b[0m",
+        "==========================================================="
+      ];
+
+      let text = "";
+      for (let i = 0; i < banner.length; i++) {
+        text += banner[i] + "\n";
+        context.writeLive(text);
+        await new Promise(r => setTimeout(r, 25));
+      }
+      return "";
+    }
+  },
+  {
+    name: "thm",
+    description: "Alias for tryhackme command",
+    execute: async (context) => {
+      const cmd = portfolioCommands.find(c => c.name === "tryhackme");
+      if (cmd) return cmd.execute(context);
+      return "";
+    }
+  },
+  {
+    name: "labs",
+    description: "Alias for tryhackme security labs command",
+    execute: async (context) => {
+      const cmd = portfolioCommands.find(c => c.name === "tryhackme");
+      if (cmd) return cmd.execute(context);
+      return "";
+    }
+  },
+  {
+    name: "portswigger",
+    description: "View PortSwigger Web Security Academy research labs",
+    execute: async (context) => {
+      const cmd = portfolioCommands.find(c => c.name === "tryhackme");
+      if (cmd) return cmd.execute(context);
+      return "";
     }
   },
   {

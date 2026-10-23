@@ -189,7 +189,27 @@ CONTACT INDEX CARD
 Compose Mail: ${PORTFOLIO_DATA.contacts.email}
 LinkedIn:     ${PORTFOLIO_DATA.contacts.linkedin}
 GitHub:       ${PORTFOLIO_DATA.contacts.github}
+TryHackMe:    ${PORTFOLIO_DATA.contacts.tryhackme}
 Portfolio:    ${PORTFOLIO_DATA.contacts.portfolio}
+`
+            },
+            'tryhackme.txt': {
+              type: 'file',
+              name: 'tryhackme.txt',
+              content: `===========================================================
+TRYHACKME & SECURITY LABS PROFILE
+===========================================================
+Operator:        charanbs
+Official Link:   ${PORTFOLIO_DATA.contacts.tryhackme}
+Active Rooms:    12+ rooms solved across TryHackMe, PortSwigger, LabEx, Local VMs
+Featured Labs:
+  * Chaining Vulnerabilities: Stored XSS -> CSRF -> Admin Takeover
+  * PortSwigger Academy: SQLi, Blind SQLi, SSRF, JWT Signature Attacks
+  * Linux Privilege Escalation: SUID abuses, GTFOBins, Cron Hijacking
+  * NetGuard AI: EvilTwin & Rogue AP wireless sandbox
+
+Tip: Type 'tryhackme' to open the interactive Security Labs Hub window.
+===========================================================
 `
             }
           }

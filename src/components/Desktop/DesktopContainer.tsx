@@ -32,14 +32,17 @@ import {
   Eye,
   ExternalLink,
   Download,
+  Flame,
+  Zap,
   X
 } from "lucide-react";
-import { PORTFOLIO_DATA, Certification } from "@/data/portfolioData";
+import { PORTFOLIO_DATA, Certification, Project } from "@/data/portfolioData";
 import { useAudio } from "@/hooks/useAudio";
 import { FutureEnvironment2099 } from "./FutureEnvironment2099";
 
 // Import custom dashboard widgets
 import { WorkspaceWindow } from "../dashboard/WorkspaceWindow";
+import { TryHackMeWidget } from "../dashboard/TryHackMeWidget";
 import { SatelliteWidget } from "../dashboard/SatelliteWidget";
 import { GlobalNetworkWidget } from "../dashboard/GlobalNetworkWidget";
 import { GithubWidget } from "../dashboard/GithubWidget";
@@ -112,6 +115,7 @@ export function AsciiArt({ className }: { className?: string }) {
 const terminalIcon = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2318181b' stroke='%233f3f46' stroke-width='2'/><path d='M6 18 L58 18' stroke='%2327272a' stroke-width='2'/><circle cx='14' cy='9' r='3' fill='%23ef4444'/><circle cx='22' cy='9' r='3' fill='%23f59e0b'/><circle cx='30' cy='9' r='3' fill='%2310b981'/><path d='M12 28 L22 34 L12 40' fill='none' stroke='%2310b981' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/><line x1='26' y1='40' x2='44' y2='40' stroke='%2310b981' stroke-width='4' stroke-linecap='round'/></svg>";
 const finderIcon = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='finder-grad' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%233b82f6'/><stop offset='100%25' stop-color='%231d4ed8'/></linearGradient></defs><rect width='64' height='64' rx='14' fill='url(%23finder-grad)'/><path d='M32 0 L32 64' stroke='%231e3a8a' stroke-width='2'/><path d='M0 32 L64 32' stroke='%231e3a8a' stroke-width='2'/><circle cx='18' cy='22' r='4.5' fill='%23ffffff'/><circle cx='18' cy='22' r='2' fill='%23000000'/><circle cx='46' cy='22' r='4.5' fill='%23ffffff'/><circle cx='46' cy='22' r='2' fill='%23000000'/><path d='M32 24 L32 38 L22 38' fill='none' stroke='%23ffffff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/><path d='M42 38 A 10 10 0 0 1 22 38' fill='none' stroke='%23ffffff' stroke-width='4' stroke-linecap='round'/></svg>";
 const portfolioIcon = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M6 12 C6 9.8 7.8 8 10 8 L24 8 C25.6 8 27.1 8.8 28 10.1 L32.8 17.1 C33.3 17.7 34 18 34.8 18 L54 18 C56.2 18 58 19.8 58 22 L58 52 C58 54.2 56.2 56 54 56 L10 56 C7.8 56 6 54.2 6 52 Z' fill='%23eab308' stroke='%23ca8a04' stroke-width='2'/><path d='M6 24 C6 21.8 7.8 20 10 20 L54 20 C56.2 20 58 21.8 58 24 L58 52 C58 54.2 56.2 56 54 56 L10 56 C7.8 56 6 54.2 6 52 Z' fill='%23facc15' opacity='0.95'/></svg>";
+const tryhackmeIcon = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23190d10' stroke='%23ef4444' stroke-width='2'/><path d='M32 10 C32 10 36 21 34 27 C38 23 42 25 44 29 C48 37 44 46 38 50 C46 48 48 38 46 32 C48 36 48 42 42 48 C36 54 26 54 20 46 C16 40 18 30 24 24 C24 30 28 32 28 32 C26 26 26 20 32 10 Z' fill='%23ef4444'/><circle cx='32' cy='42' r='4' fill='%23fbbf24'/></svg>";
 const secretIcon = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M6 12 C6 9.8 7.8 8 10 8 L24 8 C25.6 8 27.1 8.8 28 10.1 L32.8 17.1 C33.3 17.7 34 18 34.8 18 L54 18 C56.2 18 58 19.8 58 22 L58 52 C58 54.2 56.2 56 54 56 L10 56 C7.8 56 6 54.2 6 52 Z' fill='%23991b1b' stroke='%237f1d1d' stroke-width='2'/><path d='M6 24 C6 21.8 7.8 20 10 20 L54 20 C56.2 20 58 21.8 58 24 L58 52 C58 54.2 56.2 56 54 56 L10 56 C7.8 56 6 54.2 6 52 Z' fill='%23b91c1c' opacity='0.95'/><text x='32' y='44' fill='%23ffffff' font-family='monospace' font-size='14' font-weight='bold' text-anchor='middle'>???</text></svg>";
 const trashIcon = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='14' y='20' width='36' height='38' rx='4' fill='%23e4e4e7' stroke='%23a1a1aa' stroke-width='2'/><path d='M10 14 L54 14' stroke='%23a1a1aa' stroke-width='4' stroke-linecap='round'/><rect x='26' y='8' width='12' height='6' rx='1' fill='none' stroke='%23a1a1aa' stroke-width='3'/><line x1='24' y1='28' x2='24' y2='50' stroke='%23a1a1aa' stroke-width='3' stroke-linecap='round'/><line x1='32' y1='28' x2='32' y2='50' stroke='%23a1a1aa' stroke-width='3' stroke-linecap='round'/><line x1='40' y1='28' x2='40' y2='50' stroke='%23a1a1aa' stroke-width='3' stroke-linecap='round'/></svg>";
 
@@ -158,6 +162,7 @@ export function DesktopContainer() {
     ascii: { isOpen: true, isMinimized: false, isMaximized: false },
     warning: { isOpen: false, isMinimized: false, isMaximized: false },
     finder: { isOpen: false, isMinimized: false, isMaximized: false },
+    tryhackme: { isOpen: false, isMinimized: false, isMaximized: false },
     
     // Bunker Windows states
     threatIntel: { isOpen: false, isMinimized: false, isMaximized: false },
@@ -203,6 +208,7 @@ export function DesktopContainer() {
     ascii: 20,
     warning: 20,
     finder: 20,
+    tryhackme: 20,
     threatIntel: 20,
     netTopology: 20,
     packetInspector: 20,
@@ -295,7 +301,8 @@ export function DesktopContainer() {
         terminalHistory: { x: Math.floor(w * 0.65), y: 200 },
         activeServices: { x: Math.floor(w * 0.25), y: 400 },
         signalAnalyzer: { x: Math.floor(w * 0.55), y: 400 },
-        finder: { x: Math.floor(w * 0.25), y: 150 }
+        finder: { x: Math.floor(w * 0.25), y: 150 },
+        tryhackme: { x: Math.floor(w * 0.21), y: 110 }
       });
     };
     handleResize();
@@ -324,7 +331,11 @@ export function DesktopContainer() {
     const cmd = detail.command.toLowerCase();
     const commandToWindowMap: Record<string, string[]> = {
       github: ["gitActivity", "github"],
-      projects: ["code"],
+      projects: ["finder"],
+      tryhackme: ["tryhackme"],
+      thm: ["tryhackme"],
+      labs: ["tryhackme"],
+      portswigger: ["tryhackme"],
       certificates: ["threatIntel"],
       timeline: ["terminalHistory"],
       skills: ["ai"],
@@ -346,6 +357,10 @@ export function DesktopContainer() {
       satellite: ["globe", "satelliteFeedInfo", "ascii"],
       surveillance: ["ascii"]
     };
+
+    if (cmd === "projects") {
+      openFolderInFinder(["home", "charan", "projects"]);
+    }
 
     const windowsToOpen = commandToWindowMap[cmd];
     if (windowsToOpen) {
@@ -709,6 +724,7 @@ export function DesktopContainer() {
   const [historyPaths, setHistoryPaths] = useState<string[][]>([["home", "charan"]]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const openFolderInFinder = (path: string[]) => {
     setFinderPath(path);
@@ -738,6 +754,13 @@ export function DesktopContainer() {
       action: () => openFolderInFinder(["home", "charan"]),
       isOpen: windowStates.finder.isOpen && !windowStates.finder.isMinimized && finderPath.includes("charan"),
       id: "portfolio"
+    },
+    {
+      src: tryhackmeIcon,
+      name: "Security Labs",
+      action: () => updateWindowState("tryhackme", { isOpen: !windowStates.tryhackme.isOpen }),
+      isOpen: windowStates.tryhackme.isOpen && !windowStates.tryhackme.isMinimized,
+      id: "tryhackme"
     },
     ...(unlockedSecret ? [{
       src: secretIcon,
@@ -1676,6 +1699,31 @@ export function DesktopContainer() {
             <GithubWidget themeColor={workspaceTheme} />
           </WorkspaceWindow>
 
+          {/* TryHackMe & Security Labs Hub Window */}
+          {windowStates.tryhackme.isOpen && (
+            <WorkspaceWindow
+              id="tryhackme-window"
+              title="TryHackMe & Security Labs Hub — charanbs"
+              icon={<Flame className="w-3.5 h-3.5 text-red-500" />}
+              isOpen={windowStates.tryhackme.isOpen}
+              isMinimized={windowStates.tryhackme.isMinimized}
+              isMaximized={windowStates.tryhackme.isMaximized}
+              onClose={() => updateWindowState("tryhackme", { isOpen: false })}
+              onMinimize={() => updateWindowState("tryhackme", { isMinimized: true })}
+              onMaximize={() => updateWindowState("tryhackme", { isMaximized: !windowStates.tryhackme.isMaximized })}
+              defaultPosition={positions.tryhackme}
+              defaultSize="w-[58vw] min-w-[580px] h-[520px]"
+              accentColor="red"
+              dimension={dimension}
+              zIndex={zIndices.tryhackme}
+              animateDelay={0.3}
+              initialX={-200}
+              onFocus={() => focusWindow("tryhackme")}
+            >
+              <TryHackMeWidget themeColor={workspaceTheme} />
+            </WorkspaceWindow>
+          )}
+
           {/* Floating Finder Window */}
           {windowStates.finder.isOpen && (
             <WorkspaceWindow
@@ -1701,11 +1749,11 @@ export function DesktopContainer() {
                   <div className="flex items-center gap-0.5 text-zinc-400">
                     <button 
                       onClick={() => {
-                        if (finderPath.includes("certificates")) openFolderInFinder(["home", "charan"]);
+                        if (finderPath.includes("certificates") || finderPath.includes("projects")) openFolderInFinder(["home", "charan"]);
                         else if (finderPath.includes("charan")) openFolderInFinder(["Macintosh HD"]);
                       }}
                       disabled={finderPath.length === 1 && finderPath[0] === "Macintosh HD"}
-                      className="p-1 rounded hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-transparent transition"
+                      className="p-1 rounded hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-transparent transition cursor-pointer"
                       title="Back"
                     >
                       <ChevronLeft className="w-3.5 h-3.5" />
@@ -1713,10 +1761,10 @@ export function DesktopContainer() {
                     <button 
                       onClick={() => {
                         if (finderPath.length === 1 && finderPath[0] === "Macintosh HD") openFolderInFinder(["home", "charan"]);
-                        else if (finderPath.length === 2 && finderPath.includes("charan")) openFolderInFinder(["home", "charan", "certificates"]);
+                        else if (finderPath.length === 2 && finderPath.includes("charan")) openFolderInFinder(["home", "charan", "projects"]);
                       }}
-                      disabled={finderPath.includes("certificates")}
-                      className="p-1 rounded hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-transparent transition"
+                      disabled={finderPath.includes("certificates") || finderPath.includes("projects")}
+                      className="p-1 rounded hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-transparent transition cursor-pointer"
                       title="Forward"
                     >
                       <ChevronRight className="w-3.5 h-3.5" />
@@ -1730,7 +1778,7 @@ export function DesktopContainer() {
                         {idx > 0 && <span className="text-zinc-600">/</span>}
                         <button
                           onClick={() => openFolderInFinder(finderPath.slice(0, idx + 1))}
-                          className={`hover:underline transition ${
+                          className={`hover:underline transition cursor-pointer ${
                             idx === finderPath.length - 1 
                               ? "text-white font-semibold" 
                               : "text-zinc-400 hover:text-zinc-200"
@@ -1746,6 +1794,8 @@ export function DesktopContainer() {
                 <div className="text-[10px] text-zinc-500 font-mono">
                   {finderPath.includes("certificates") 
                     ? "3 items • Verified Credentials" 
+                    : finderPath.includes("projects")
+                    ? `${PORTFOLIO_DATA.projects.length} items • Visual Project Cards`
                     : finderPath.includes("charan") 
                     ? "5 items" 
                     : "1 volume"}
@@ -1772,7 +1822,7 @@ export function DesktopContainer() {
                       <button 
                         onClick={() => openFolderInFinder(["home", "charan"])}
                         className={`w-full text-left px-2 py-1.5 rounded flex items-center gap-2 cursor-pointer transition ${
-                          finderPath.includes("charan") && !finderPath.includes("certificates") ? "bg-blue-600/30 text-white font-semibold" : "hover:bg-zinc-800/30 text-zinc-300"
+                          finderPath.includes("charan") && !finderPath.includes("certificates") && !finderPath.includes("projects") ? "bg-blue-600/30 text-white font-semibold" : "hover:bg-zinc-800/30 text-zinc-300"
                         }`}
                       >
                         <Folder className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
@@ -1789,6 +1839,18 @@ export function DesktopContainer() {
                         <Award className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                         <span className="truncate">certificates</span>
                         <span className="ml-auto text-[9px] bg-emerald-500/20 text-emerald-300 px-1 rounded font-mono">3</span>
+                      </button>
+
+                      {/* Nested projects folder inside charan */}
+                      <button 
+                        onClick={() => openFolderInFinder(["home", "charan", "projects"])}
+                        className={`w-full text-left pl-5 pr-2 py-1.5 rounded flex items-center gap-2 cursor-pointer transition ${
+                          finderPath.includes("projects") ? "bg-blue-600/30 text-white font-semibold" : "hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-200"
+                        }`}
+                      >
+                        <Code className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                        <span className="truncate">projects</span>
+                        <span className="ml-auto text-[9px] bg-blue-500/20 text-blue-300 px-1 rounded font-mono">{PORTFOLIO_DATA.projects.length}</span>
                       </button>
 
                       {unlockedSecret && (
@@ -1864,6 +1926,123 @@ export function DesktopContainer() {
                             </div>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  ) : finderPath.includes("projects") ? (
+                    /* Option 2: Visual Project Cards View inside Finder */
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                        <div className="flex items-center gap-2">
+                          <Code className="w-4 h-4 text-blue-400" />
+                          <h3 className="text-xs font-bold text-white tracking-wide uppercase">
+                            Offensive Security & Software Projects
+                          </h3>
+                        </div>
+                        <span className="text-[10px] text-zinc-400 font-mono">
+                          Click any card to inspect kill-chain & Quick Look
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+                        {PORTFOLIO_DATA.projects.map((proj) => {
+                          const isTHM = proj.slug.includes("tryhackme");
+                          const isPS = proj.slug.includes("portswigger");
+                          const isNetGuard = proj.slug.includes("netguard");
+                          
+                          const badgeBorder = isTHM 
+                            ? "border-red-500/30 bg-red-500/10 text-red-400" 
+                            : isPS 
+                            ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                            : isNetGuard
+                            ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-300"
+                            : "border-purple-500/30 bg-purple-500/10 text-purple-300";
+
+                          const hoverBorder = isTHM
+                            ? "hover:border-red-500/60"
+                            : isPS
+                            ? "hover:border-amber-500/60"
+                            : isNetGuard
+                            ? "hover:border-cyan-500/60"
+                            : "hover:border-purple-500/60";
+
+                          return (
+                            <div
+                              key={proj.slug}
+                              onClick={() => setSelectedProject(proj)}
+                              className={`group relative bg-zinc-950/80 hover:bg-zinc-900 border border-white/10 ${hoverBorder} rounded-xl p-4 flex flex-col justify-between gap-3 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 shadow-lg select-none`}
+                            >
+                              <div className="space-y-2.5">
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${badgeBorder}`}>
+                                    {proj.badge || "Project"}
+                                  </span>
+                                  <span className="text-[10px] font-mono text-zinc-400 bg-white/5 px-2 py-0.5 rounded">
+                                    {proj.role}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors line-clamp-1">
+                                    {proj.name}
+                                  </h4>
+                                  <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
+                                    Category: {proj.category || "Cybersecurity"}
+                                  </p>
+                                </div>
+
+                                {proj.killChain && (
+                                  <div className="bg-black/60 border border-white/5 rounded-lg p-2 font-mono text-[10px] text-zinc-300 space-y-1">
+                                    <div className="text-[9px] uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1">
+                                      <Zap className="w-3 h-3 text-amber-400" />
+                                      Attack Vector / Flow
+                                    </div>
+                                    <div className="text-zinc-300 line-clamp-1 text-[10px]">
+                                      {proj.killChain[0]} ➔ ...
+                                    </div>
+                                  </div>
+                                )}
+
+                                <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">
+                                  {proj.description}
+                                </p>
+                              </div>
+
+                              <div className="space-y-2.5 pt-2 border-t border-white/5">
+                                <div className="flex flex-wrap gap-1">
+                                  {proj.tech.slice(0, 4).map((t) => (
+                                    <span key={t} className="text-[9px] font-mono bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded border border-white/5">
+                                      #{t}
+                                    </span>
+                                  ))}
+                                  {proj.tech.length > 4 && (
+                                    <span className="text-[9px] font-mono text-zinc-500 px-1 py-0.5">
+                                      +{proj.tech.length - 4}
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center justify-between pt-1">
+                                  <span className="text-xs font-semibold text-blue-400 group-hover:text-blue-300 flex items-center gap-1.5">
+                                    <Eye className="w-3.5 h-3.5" /> Quick Look
+                                  </span>
+                                  {(isTHM || isPS) && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        updateWindowState("tryhackme", { isOpen: true, isMinimized: false });
+                                      }}
+                                      className="text-[10px] font-mono px-2 py-1 rounded bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 flex items-center gap-1 transition cursor-pointer"
+                                    >
+                                      <Flame className="w-3 h-3 text-red-400" />
+                                      View in Labs Hub
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ) : finderPath.includes("charan") ? (
@@ -1960,26 +2139,45 @@ export function DesktopContainer() {
               </div>
             )}
 
+            {/* TryHackMe & Security Labs Widget (Mobile) */}
+            {windowStates.tryhackme.isOpen && (
+              <div className="border border-red-500/30 rounded-xl bg-zinc-950/90 overflow-hidden flex flex-col font-sans">
+                <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase flex items-center justify-between">
+                  <span className="flex items-center gap-1.5"><Flame className="w-3.5 h-3.5 text-red-500" /> Security Labs Hub — charanbs</span>
+                  <button onClick={() => updateWindowState("tryhackme", { isOpen: false })} className="text-zinc-400 hover:text-white cursor-pointer"><X className="w-3.5 h-3.5" /></button>
+                </div>
+                <div className="h-[440px] overflow-hidden flex flex-col">
+                  <TryHackMeWidget themeColor={workspaceTheme} />
+                </div>
+              </div>
+            )}
+
             {/* Finder Widget (Mobile) */}
             {windowStates.finder.isOpen && (
               <div className="border border-white/10 rounded-xl bg-zinc-950/80 overflow-hidden flex flex-col font-sans">
                 <div className="bg-zinc-900 px-3 py-2 text-[10px] text-zinc-300 font-bold border-b border-white/5 uppercase flex items-center justify-between">
                   <span className="flex items-center gap-1.5"><Folder className="w-3.5 h-3.5 text-blue-400" /> Finder — /{finderPath.join("/")}</span>
-                  <button onClick={() => updateWindowState("finder", { isOpen: false })} className="text-zinc-400 hover:text-white"><X className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => updateWindowState("finder", { isOpen: false })} className="text-zinc-400 hover:text-white cursor-pointer"><X className="w-3.5 h-3.5" /></button>
                 </div>
                 <div className="p-3 space-y-3">
-                  <div className="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-xs overflow-x-auto pb-1">
                     <button 
                       onClick={() => openFolderInFinder(["home", "charan"])} 
-                      className={`px-2.5 py-1 rounded-md text-[11px] ${finderPath.includes("charan") && !finderPath.includes("certificates") ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-300"}`}
+                      className={`px-2.5 py-1 rounded-md text-[11px] whitespace-nowrap cursor-pointer ${finderPath.includes("charan") && !finderPath.includes("certificates") && !finderPath.includes("projects") ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-300"}`}
                     >
                       charan
                     </button>
                     <button 
                       onClick={() => openFolderInFinder(["home", "charan", "certificates"])} 
-                      className={`px-2.5 py-1 rounded-md text-[11px] flex items-center gap-1 ${finderPath.includes("certificates") ? "bg-emerald-600 text-white" : "bg-zinc-800 text-zinc-300"}`}
+                      className={`px-2.5 py-1 rounded-md text-[11px] flex items-center gap-1 whitespace-nowrap cursor-pointer ${finderPath.includes("certificates") ? "bg-emerald-600 text-white" : "bg-zinc-800 text-zinc-300"}`}
                     >
                       <Award className="w-3 h-3" /> certificates (3)
+                    </button>
+                    <button 
+                      onClick={() => openFolderInFinder(["home", "charan", "projects"])} 
+                      className={`px-2.5 py-1 rounded-md text-[11px] flex items-center gap-1 whitespace-nowrap cursor-pointer ${finderPath.includes("projects") ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-300"}`}
+                    >
+                      <Code className="w-3 h-3" /> projects ({PORTFOLIO_DATA.projects.length})
                     </button>
                   </div>
                   {finderPath.includes("certificates") ? (
@@ -1999,15 +2197,68 @@ export function DesktopContainer() {
                         </div>
                       ))}
                     </div>
+                  ) : finderPath.includes("projects") ? (
+                    <div className="grid grid-cols-1 gap-2.5">
+                      {PORTFOLIO_DATA.projects.map(proj => (
+                        <div 
+                          key={proj.slug} 
+                          onClick={() => setSelectedProject(proj)} 
+                          className="p-3 rounded-xl bg-zinc-900/80 border border-white/5 space-y-2 cursor-pointer active:bg-zinc-800"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-mono font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
+                              {proj.badge || "Project"}
+                            </span>
+                            <span className="text-[10px] font-mono text-zinc-400">
+                              {proj.role}
+                            </span>
+                          </div>
+                          <div className="text-xs font-bold text-white leading-snug">
+                            {proj.name}
+                          </div>
+                          <p className="text-[11px] text-zinc-400 line-clamp-2">
+                            {proj.description}
+                          </p>
+                          <div className="flex items-center justify-between pt-1 text-[10px]">
+                            <span className="text-blue-400 font-semibold flex items-center gap-1">
+                              <Eye className="w-3 h-3" /> Quick Look
+                            </span>
+                            {(proj.slug.includes("tryhackme") || proj.slug.includes("portswigger")) && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateWindowState("tryhackme", { isOpen: true, isMinimized: false });
+                                }}
+                                className="px-2 py-0.5 rounded bg-red-600/20 text-red-300 border border-red-500/30 text-[9px] font-mono flex items-center gap-1 cursor-pointer"
+                              >
+                                <Flame className="w-2.5 h-2.5" /> Labs Hub
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   ) : (
-                    <div 
-                      onClick={() => openFolderInFinder(["home", "charan", "certificates"])} 
-                      className="flex items-center gap-3 p-3 rounded-xl bg-zinc-900/60 border border-white/5 cursor-pointer hover:bg-zinc-800/50"
-                    >
-                      <Folder className="w-8 h-8 text-yellow-400 shrink-0" />
-                      <div>
-                        <div className="text-xs font-bold text-white">certificates</div>
-                        <div className="text-[10px] text-emerald-400">3 verified credentials</div>
+                    <div className="space-y-2">
+                      <div 
+                        onClick={() => openFolderInFinder(["home", "charan", "certificates"])} 
+                        className="flex items-center gap-3 p-3 rounded-xl bg-zinc-900/60 border border-white/5 cursor-pointer hover:bg-zinc-800/50"
+                      >
+                        <Folder className="w-8 h-8 text-yellow-400 shrink-0" />
+                        <div>
+                          <div className="text-xs font-bold text-white">certificates</div>
+                          <div className="text-[10px] text-emerald-400">3 verified credentials</div>
+                        </div>
+                      </div>
+                      <div 
+                        onClick={() => openFolderInFinder(["home", "charan", "projects"])} 
+                        className="flex items-center gap-3 p-3 rounded-xl bg-zinc-900/60 border border-white/5 cursor-pointer hover:bg-zinc-800/50"
+                      >
+                        <Code className="w-8 h-8 text-blue-400 shrink-0" />
+                        <div>
+                          <div className="text-xs font-bold text-white">projects</div>
+                          <div className="text-[10px] text-blue-400">{PORTFOLIO_DATA.projects.length} visual project cards</div>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -2264,7 +2515,155 @@ export function DesktopContainer() {
                 </a>
                 <button
                   onClick={() => setSelectedCert(null)}
-                  className="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white font-medium text-xs transition"
+                  className="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white font-medium text-xs transition cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Visual Project Cards Quick Look Modal */}
+      {selectedProject && (
+        <div 
+          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 select-none font-sans"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div 
+            className="relative bg-zinc-950 border border-white/20 rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-5 py-3.5 bg-zinc-900/90 border-b border-white/10 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center shrink-0">
+                  <Code className="w-4 h-4 text-blue-400" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold text-white truncate">{selectedProject.name}</h3>
+                  <p className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-mono">
+                    <span className="font-semibold text-zinc-300">{selectedProject.badge || "Project"}</span>
+                    <span>•</span>
+                    <span className="text-zinc-400">{selectedProject.role}</span>
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSelectedProject(null)}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                title="Close (Esc)"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4 bg-zinc-950/70">
+              {/* Kill Chain / Architecture Pipeline */}
+              {selectedProject.killChain && selectedProject.killChain.length > 0 && (
+                <div className="bg-zinc-900/80 border border-white/10 rounded-xl p-4 space-y-2.5">
+                  <div className="text-[10px] font-mono uppercase text-amber-400 font-bold flex items-center gap-1.5 tracking-wider">
+                    <Zap className="w-3.5 h-3.5 text-amber-400" />
+                    Attack Kill-Chain / Architectural Workflow
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {selectedProject.killChain.map((step, sIdx) => (
+                      <div 
+                        key={sIdx}
+                        className="p-2.5 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px] text-zinc-200 leading-snug flex items-start gap-2"
+                      >
+                        <span className="w-5 h-5 rounded bg-blue-600/20 text-blue-300 border border-blue-500/30 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                          {sIdx + 1}
+                        </span>
+                        <span>{step.replace(/^\d+\.\s*/, '')}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Detailed Description */}
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider font-mono">
+                  Project Description & Scenario
+                </h4>
+                <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-900/60 p-4 rounded-xl border border-white/5">
+                  {selectedProject.description}
+                </p>
+              </div>
+
+              {/* Highlights */}
+              {selectedProject.highlights && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider font-mono">
+                    Key Highlights & Vulnerabilities Tested
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {selectedProject.highlights.map((h, i) => (
+                      <div 
+                        key={i} 
+                        className="text-[11px] text-zinc-300 bg-zinc-900/60 p-2.5 rounded-lg border border-white/5 flex items-start gap-2"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>{h}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tech Stack Chips */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider font-mono">
+                  Technologies & Testing Frameworks
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedProject.tech.map((t) => (
+                    <span 
+                      key={t}
+                      className="px-2.5 py-1 rounded-lg text-xs font-mono bg-zinc-900 text-zinc-200 border border-white/10"
+                    >
+                      #{t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-5 py-3.5 bg-zinc-900/90 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shrink-0">
+              <span className="text-[11px] text-zinc-500 font-mono">
+                Project: {selectedProject.slug}
+              </span>
+              <div className="flex items-center gap-2 self-end sm:self-center flex-wrap">
+                {(selectedProject.slug.includes("tryhackme") || selectedProject.slug.includes("portswigger")) && (
+                  <button
+                    onClick={() => {
+                      setSelectedProject(null);
+                      updateWindowState("tryhackme", { isOpen: true, isMinimized: false });
+                    }}
+                    className="px-3.5 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium text-xs flex items-center gap-1.5 transition shadow-md cursor-pointer"
+                  >
+                    <Flame className="w-3.5 h-3.5" />
+                    Open Security Labs Hub
+                  </button>
+                )}
+                {selectedProject.officialUrl && (
+                  <a
+                    href={selectedProject.officialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center gap-1.5 transition shadow-md cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    {selectedProject.officialUrlLabel || "Open Official Profile"}
+                  </a>
+                )}
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs transition cursor-pointer"
                 >
                   Done
                 </button>
