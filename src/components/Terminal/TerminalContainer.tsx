@@ -325,31 +325,18 @@ export function TerminalContainer({
               )}
             </button>
 
-            {/* eDEX HUD Window Controls */}
+            {/* eDEX Terminal Action Controls */}
             <div className="flex items-center space-x-1 pl-1 border-l border-cyan-500/20">
               <button
-                onClick={(e) => { e.stopPropagation(); playBeep(330, 0.1, false); onMinimize?.(); }}
-                className="w-5 h-4 flex items-center justify-center text-[9px] font-mono text-cyan-400/80 hover:text-cyan-100 border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 rounded-xs transition-colors cursor-pointer"
-                title="Minimize"
-                aria-label="Minimize"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  playBeep(440, 0.05);
+                  triggerClear();
+                }}
+                className="px-1.5 py-0.5 text-[8px] font-mono text-cyan-400/80 hover:text-cyan-100 border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 rounded-xs transition-colors cursor-pointer"
+                title="Clear terminal buffer"
               >
-                _
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); playBeep(440, 0.1, false); onMaximize?.(); }}
-                className="w-5 h-4 flex items-center justify-center text-[8px] font-mono text-cyan-400/80 hover:text-cyan-100 border border-cyan-500/30 hover:border-cyan-400 hover:bg-cyan-500/20 rounded-xs transition-colors cursor-pointer"
-                title="Maximize"
-                aria-label="Maximize"
-              >
-                ▢
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); playBeep(220, 0.1, false); onClose?.(); }}
-                className="w-5 h-4 flex items-center justify-center text-[9px] font-mono text-red-400/80 hover:text-red-100 border border-red-500/30 hover:border-red-400 hover:bg-red-500/25 rounded-xs transition-colors cursor-pointer"
-                title="Close"
-                aria-label="Close"
-              >
-                ✕
+                CLEAR
               </button>
             </div>
           </div>
