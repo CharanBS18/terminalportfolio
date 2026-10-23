@@ -751,18 +751,6 @@ export function DesktopContainer() {
     }
   ];
 
-  // Accents strictly styled to matches: #00FF8C (green), #00FFD0 (cyan), #93FFB6 (mint), #D2FFF0 (light)
-  const indicatorColors: Record<string, string> = {
-    green: "bg-[#00FF8C] shadow-[0_0_6px_#00FF8C]",
-    cyan: "bg-[#00FFD0] shadow-[0_0_6px_#00FFD0]",
-    purple: "bg-[#93FFB6] shadow-[0_0_6px_#93FFB6]",
-    amber: "bg-amber-500 shadow-[0_0_6px_#f59e0b]",
-    red: "bg-red-500 shadow-[0_0_6px_#ef4444]",
-    white: "bg-[#D2FFF0] shadow-[0_0_6px_#D2FFF0]"
-  };
-
-  const activeIndicator = indicatorColors[workspaceTheme] || indicatorColors.cyan;
-
   return (
     <div 
       ref={desktopRef}
@@ -808,67 +796,6 @@ export function DesktopContainer() {
           <span className="hidden md:inline flex items-center gap-1">
             <Radio className="w-3.5 h-3.5 text-cyan-400" /> SECURE GRID
           </span>
-        </div>
-
-        {/* Middle quick toggles for all windows */}
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none px-2 py-1 select-none">
-          {[
-            { id: "terminal", icon: <TermIcon className="w-3.5 h-3.5" />, label: "Terminal" },
-            { id: "globe", icon: <Globe className="w-3.5 h-3.5" />, label: "Globe" },
-            { id: "ascii", icon: <Video className="w-3.5 h-3.5" />, label: "ASCII" },
-            { id: "logs", icon: <FileText className="w-3.5 h-3.5" />, label: "Logs" },
-            { id: "radar", icon: <Compass className="w-3.5 h-3.5" />, label: "Radar" },
-            { id: "cpu", icon: <Cpu className="w-3.5 h-3.5" />, label: "CPU" },
-            { id: "warning", icon: <ShieldAlert className="w-3.5 h-3.5" />, label: "Alerts" },
-            { id: "visualizer", icon: <Music className="w-3.5 h-3.5" />, label: "Audio" },
-            { id: "network", icon: <Activity className="w-3.5 h-3.5" />, label: "Network" },
-            
-            // Bunker Widgets Toggles
-            { id: "threatIntel", icon: <ShieldAlert className="w-3.5 h-3.5" />, label: "Threat Intel" },
-            { id: "netTopology", icon: <Globe className="w-3.5 h-3.5" />, label: "Net Topology" },
-            { id: "packetInspector", icon: <Activity className="w-3.5 h-3.5" />, label: "Packet Insp" },
-            { id: "sshSessions", icon: <TermIcon className="w-3.5 h-3.5" />, label: "SSH Sessions" },
-            { id: "processManager", icon: <Cpu className="w-3.5 h-3.5" />, label: "Proc Mgr" },
-            { id: "fileExplorer", icon: <Folder className="w-3.5 h-3.5" />, label: "File Explorer" },
-            { id: "dockerK8s", icon: <Cpu className="w-3.5 h-3.5" />, label: "Docker/K8s" },
-            { id: "gitActivity", icon: <Code className="w-3.5 h-3.5" />, label: "Git activity" },
-            { id: "memoryMap", icon: <Binary className="w-3.5 h-3.5" />, label: "Memory map" },
-            { id: "firewall", icon: <ShieldAlert className="w-3.5 h-3.5" />, label: "Firewall" },
-            { id: "missionObjectives", icon: <CheckCircle2 className="w-3.5 h-3.5" />, label: "Objectives" },
-            { id: "cryptoTicker", icon: <Activity className="w-3.5 h-3.5" />, label: "Crypto Ticker" },
-            { id: "weatherTime", icon: <Clock className="w-3.5 h-3.5" />, label: "Weather Time" },
-            { id: "diskActivity", icon: <Folder className="w-3.5 h-3.5" />, label: "Disk Activity" },
-            { id: "powerMonitor", icon: <Cpu className="w-3.5 h-3.5" />, label: "Power Monitor" },
-            { id: "secureNotes", icon: <FileText className="w-3.5 h-3.5" />, label: "Secure Notes" },
-            { id: "terminalHistory", icon: <TermIcon className="w-3.5 h-3.5" />, label: "Term History" },
-            { id: "activeServices", icon: <Activity className="w-3.5 h-3.5" />, label: "Services" },
-            { id: "signalAnalyzer", icon: <Music className="w-3.5 h-3.5" />, label: "Signal Analyzer" },
-            { id: "satelliteFeedInfo", icon: <Globe className="w-3.5 h-3.5" />, label: "Satellite Info" },
-            
-            { id: "github", icon: <GithubIcon className="w-3.5 h-3.5" />, label: "GitHub" },
-            { id: "code", icon: <Code className="w-3.5 h-3.5" />, label: "Code stream" },
-            { id: "matrix", icon: <Binary className="w-3.5 h-3.5" />, label: "Matrix Rain" },
-            { id: "ai", icon: <Brain className="w-3.5 h-3.5" />, label: "AI metrics" },
-            { id: "clock", icon: <Clock className="w-3.5 h-3.5" />, label: "Clock" }
-          ].map((item) => {
-            const state = windowStates[item.id] || { isOpen: false, isMinimized: false };
-            const isActive = state.isOpen && !state.isMinimized;
-            return (
-              <button
-                key={item.id}
-                onClick={() => toggleWindow(item.id)}
-                className={`relative flex items-center justify-center p-1.5 rounded transition-all duration-150 cursor-pointer shrink-0 ${
-                  isActive ? "bg-white/5 text-white" : "hover:bg-white/5 hover:text-zinc-200"
-                }`}
-                title={`Toggle ${item.label} Window`}
-              >
-                {item.icon}
-                {isActive && (
-                  <span className={`absolute bottom-0 w-1 h-1 rounded-full ${activeIndicator}`} />
-                )}
-              </button>
-            );
-          })}
         </div>
 
         {/* Right HUD Controls */}
