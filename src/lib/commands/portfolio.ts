@@ -162,21 +162,65 @@ export const portfolioCommands: Command[] = [
     name: "who",
     description: "Display biographical identity details with ASCII logo",
     execute: async (context) => {
+      // Check if admin is currently locked in stealth quarantine
+      if (context.userState !== "charan" && context.userState !== "root") {
+        const lockedStory = [
+          "===========================================================",
+          "\x1b[1;31m[!] CLASSIFIED ARCHIVE: OPERATOR IDENTITY LOCKED\x1b[0m",
+          "===========================================================",
+          "Access Denied: Operator telemetry is locked in quarantine.",
+          "",
+          "SECURITY INCIDENT REPORT:",
+          "  The system administrator (\"Charan B.S.\") detected an unauthorized",
+          "  reconnaissance trace across this network node. To safeguard core",
+          "  infrastructure, he initiated an emergency defensive lockdown and",
+          "  vanished into an encrypted stealth quarantine partition.",
+          "",
+          "STATUS TELEMETRY:",
+          "  Identity Matrix : \x1b[1;33m[LOCKED / ENCRYPTED]\x1b[0m",
+          "  Target Subject  : Charan B.S. (Offensive Security Specialist)",
+          "  Last Known Grid : Sector 0x7F - Hassan Subnet",
+          "  Security State  : Active Stealth Isolation",
+          "",
+          "MISSION DIRECTIVE:",
+          "  The administrator is hidden deep inside the system perimeter.",
+          "  To breach the quarantine locks and search for him, run:",
+          "",
+          "      \x1b[1;32moverride\x1b[0m",
+          "",
+          "  Can you crack the security parameters and find him?",
+          "==========================================================="
+        ];
+        
+        let currentText = "";
+        for (let i = 0; i < lockedStory.length; i++) {
+          currentText += lockedStory[i] + "\n";
+          context.writeLive(currentText);
+          await new Promise(r => setTimeout(r, 35));
+        }
+        return "";
+      }
+
+      // Unlocked state (after running override or as root)
       const neofetchLines = [
+        "===========================================================",
+        "\x1b[1;32m[✓] OPERATOR IDENTITY UNLOCKED: CHARAN B.S. (ONLINE)\x1b[0m",
+        "===========================================================",
         "      \x1b[1;36m██████\x1b[0m       OS          : Charan OS v3.1",
         "    \x1b[1;36m██████████\x1b[0m     User        : Charan BS",
         "   \x1b[1;36m███      ███\x1b[0m    Role        : Offensive Security & Penetration Testing",
         "   \x1b[1;36m███\x1b[0m             Location    : Hassan, India",
         "   \x1b[1;36m███      ███\x1b[0m    Focus       : Web App Security, Penetration Testing, Network Defense",
         "    \x1b[1;36m██████████\x1b[0m     Toolkit     : Burp Suite, Nmap, Wireshark, Metasploit, Linux",
-        "      \x1b[1;36m██████\x1b[0m       Scripting   : Python, Bash, Go, Security Automation"
+        "      \x1b[1;36m██████\x1b[0m       Scripting   : Python, Bash, Go, Security Automation",
+        "==========================================================="
       ];
       
       let currentText = "";
       for (let i = 0; i < neofetchLines.length; i++) {
         currentText += neofetchLines[i] + "\n";
         context.writeLive(currentText);
-        await new Promise(r => setTimeout(r, 80));
+        await new Promise(r => setTimeout(r, 60));
       }
       return "";
     }
@@ -235,7 +279,7 @@ export const portfolioCommands: Command[] = [
 
       let output = "===========================================================\n";
       if (PORTFOLIO_DATA.experience.length === 0) {
-        output += "No professional experience logged.\n// TODO: Add items inside portfolioData.ts once details are ready.\n";
+        output += "No professional experience logged.\n";
       } else {
         PORTFOLIO_DATA.experience.forEach(exp => {
           output += `[${exp.period}] - ${exp.role}\n  Company: ${exp.company}\n  Logs:\n${exp.description.map(d => `    * ${d}`).join("\n")}\n\n`;
@@ -323,7 +367,7 @@ export const portfolioCommands: Command[] = [
     description: "Access Twitter/X channel",
     execute: () => {
       if (PORTFOLIO_DATA.contacts.twitter === "TODO") {
-        return "Twitter profile link not provided. (TODO inside portfolioData.ts)";
+        return "Twitter / X profile link is currently not configured.";
       }
       window.open(PORTFOLIO_DATA.contacts.twitter, "_blank");
       return "Establishing handshake with twitter.com... Redirecting.";
@@ -361,15 +405,23 @@ export const portfolioCommands: Command[] = [
       await runMultiDownload("Certifications Hub", tasks, context);
 
       let output = "===========================================================\n";
-      output += "CERTIFICATION & CREDENTIALS LEDGER\n";
+      output += "VERIFIED CYBERSECURITY CERTIFICATIONS LEDGER\n";
       output += "===========================================================\n";
-      if (PORTFOLIO_DATA.certifications.length === 0) {
-        output += "No cybersecurity certificates logged.\nCertifications are currently in progress / unavailable.\n";
-      } else {
-        PORTFOLIO_DATA.certifications.forEach((cert, index) => {
-          output += `[CREDENTIAL ${String(index + 1).padStart(2, "0")}] - ${cert.name}\n  Issuer: ${cert.issuer}\n  Resource URL: ${cert.ref}\n\n`;
-        });
-      }
+      PORTFOLIO_DATA.certifications.forEach((cert, index) => {
+        output += `[CREDENTIAL ${String(index + 1).padStart(2, "0")}] - ${cert.name}\n`;
+        output += `  Issuer:       ${cert.issuer}\n`;
+        output += `  Completed:    ${cert.date}\n`;
+        if (cert.verificationCode) {
+          output += `  Verification: ${cert.verificationCode}\n`;
+        }
+        output += `  Focus:        ${cert.description}\n`;
+        output += `  Document:     ${cert.ref}\n\n`;
+      });
+      output += "-----------------------------------------------------------\n";
+      output += "📁 You can inspect and view the certificate images in Finder:\n";
+      output += "   finder/charan/certificates\n";
+      output += "-----------------------------------------------------------\n";
+      output += "Tip: Click the Finder icon on the Dock or type 'open certificates/[filename].pdf'.\n";
       output += "===========================================================";
       return output;
     }

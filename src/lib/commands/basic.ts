@@ -507,7 +507,11 @@ DATA BREACH CODE: 0xDEADBEEF
   {
     name: "neofetch",
     description: "Display system summary details with ASCII logo",
-    execute: () => {
+    execute: (context) => {
+      if (context.userState !== "charan" && context.userState !== "root") {
+        const whoCommand = context.registry.getCommands().find(c => c.name === "who");
+        if (whoCommand) return whoCommand.execute(context);
+      }
       return [
         "      \x1b[1;36m██████\x1b[0m       OS          : Charan OS v3.1",
         "    \x1b[1;36m██████████\x1b[0m     User        : Charan BS",

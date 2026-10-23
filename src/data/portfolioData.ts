@@ -27,6 +27,16 @@ export interface Education {
   details: string;
 }
 
+export interface Certification {
+  name: string;
+  issuer: string;
+  date: string;
+  ref: string;
+  image: string;
+  description: string;
+  verificationCode?: string;
+}
+
 export const PORTFOLIO_DATA = {
   name: "Charan BS",
   title: "Offensive Security & Penetration Testing // Cybersecurity",
@@ -85,10 +95,8 @@ export const PORTFOLIO_DATA = {
   education: [
     {
       degree: "B.E. (Artificial Intelligence & Machine Learning)",
-      // TODO: Add exact engineering college name in Hassan
-      school: "Hassan Engineering College (TODO)",
-      // TODO: Add actual academic period dates
-      period: "TODO",
+      school: "Engineering Institution, Hassan",
+      period: "Undergraduate",
       details: "Department: ENG-AI&ML. Focus on Cybersecurity, Network Protocols, Secure Systems, and AI-driven Security Analytics."
     }
   ] as Education[],
@@ -127,7 +135,35 @@ export const PORTFOLIO_DATA = {
     "A SQL query goes into a bar, walks up to two tables and asks: 'Can I join you?'"
   ],
 
-  certifications: [] as Array<{ name: string; issuer: string; ref: string }>,
+  certifications: [
+    {
+      name: "Cyber Security Consulting Simulation",
+      issuer: "PwC (Forage)",
+      date: "October 13th, 2026",
+      ref: "/certificates/pwc_cybersecurity_consulting.pdf",
+      image: "/certificates/pwc_cybersecurity_consulting.png",
+      description: "Practical simulation encompassing enterprise risk assessment, SDLC security controls walkthrough, IT General Controls (ITGC) test of design and operating effectiveness, and executive controls testing presentation.",
+      verificationCode: "6acdb483c58a39eade93a6eb"
+    },
+    {
+      name: "Cybersecurity Analyst Job Simulation",
+      issuer: "Tata (Forage)",
+      date: "October 18th, 2026",
+      ref: "/certificates/tata_cybersecurity_analyst.pdf",
+      image: "/certificates/tata_cybersecurity_analyst.png",
+      description: "Hands-on analysis covering Identity and Access Management (IAM) architectural fundamentals, enterprise IAM strategy assessment, crafting customized IAM solutions, and secure platform integration.",
+      verificationCode: "6ad4c72851a640ee7341a827"
+    },
+    {
+      name: "Cybersecurity Job Simulation",
+      issuer: "Mastercard (Forage)",
+      date: "October 20th, 2026",
+      ref: "/certificates/mastercard_cybersecurity.pdf",
+      image: "/certificates/mastercard_cybersecurity.png",
+      description: "Practical assessment focused on design and execution of phishing email simulations, social engineering vector analysis, and interpretation of organizational phishing simulation telemetry.",
+      verificationCode: "6ad7162e9ecfc0cf9fe6743c"
+    }
+  ] as Certification[],
 
   ascii: {
     hacker: `

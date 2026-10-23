@@ -111,10 +111,56 @@ export const secretCommands: Command[] = [
   },
   {
     name: "override",
-    description: "Attempt override sequence",
-    hidden: true,
-    execute: () => {
-      return "System override protocol requires full local verification. Decrypt the terminal. Start with 'unlock'.";
+    description: "Breach quarantine perimeter and initiate admin search override",
+    hidden: false,
+    execute: async (context) => {
+      if (context.userState === "charan" || context.userState === "root") {
+        return [
+          "===========================================================",
+          "\x1b[1;32m[✓] SECURITY OVERRIDE ALREADY ACTIVE\x1b[0m",
+          "===========================================================",
+          "Administrator session is already unlocked and decrypted.",
+          "Operator: Charan B.S. is currently online.",
+          "",
+          "Tip: Type 'who' or 'about' to inspect operator telemetry.",
+          "==========================================================="
+        ].join("\n");
+      }
+
+      const breachSteps = [
+        "===========================================================",
+        "\x1b[1;31m[+] INITIATING SYSTEM SECURITY OVERRIDE PROTOCOL...\x1b[0m",
+        "===========================================================",
+        "[*] Probing network perimeter for hidden quarantine cluster...",
+        "[*] Target identified: Stealth enclave at memory sector 0x7FFF_88AC.",
+        "[*] Crafting custom heap spray & buffer overflow exploit...",
+        "[*] Injecting shellcode to hijack execution flow (EIP -> 0xDEADBEEF)...",
+        "[*] Overriding Access Control Lists (ACLs) and defeating ASLR...",
+        "[*] Disabling firewall IDS/IPS sensors & tripwires...",
+        "\x1b[1;33m[!] PRIVILEGE ESCALATION CONFIRMED: ROOT OPERATOR GRANTED.\x1b[0m",
+        "[*] Decrypting administrator quantum keystore...",
+        "===========================================================",
+        "\x1b[1;32m[✓] OVERRIDE COMPLETE // SECURITY PARAMETERS COMPROMISED\x1b[0m",
+        "Admin signature verified! Establishing neural handshake with Charan B.S....",
+        "==========================================================="
+      ];
+
+      let stream = "";
+      for (const step of breachSteps) {
+        stream += step + "\n";
+        context.writeLive(stream);
+        await new Promise(r => setTimeout(r, 140));
+      }
+
+      await new Promise(r => setTimeout(r, 350));
+      
+      // Escalate state to operator
+      context.setUserState("charan");
+      
+      // Trigger dramatic Secret Ending screen
+      context.triggerSecretEnding();
+      
+      return "";
     }
   }
 ];

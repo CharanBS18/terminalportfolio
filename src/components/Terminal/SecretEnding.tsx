@@ -92,7 +92,7 @@ export function SecretEnding({ onClose }: SecretEndingProps) {
                 &quot;You finally found me.&quot;
               </p>
               <p>
-                I am <span className="text-red-400 font-bold">Charan B.S.</span>, a Software Engineer, Builder, and Creative UX Architect based in Bengaluru, India.
+                I am <span className="text-red-400 font-bold">Charan B.S.</span>, an Offensive Security Specialist, Penetration Tester, and Cybersecurity Researcher based in Hassan, India.
               </p>
               <p>
                 Thank you for taking the time to explore this retro shell portfolio. You&apos;ve breached the security parameters and demonstrated excellent terminal navigation skills.

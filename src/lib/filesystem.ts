@@ -128,33 +128,32 @@ ${proj.description}
               name: 'certificates',
               children: PORTFOLIO_DATA.certifications.length > 0 
                 ? PORTFOLIO_DATA.certifications.reduce((acc, cert) => {
-                    const key = cert.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.pdf';
-                    acc[key] = {
+                    const baseKey = cert.ref.split('/').pop() || `${cert.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.pdf`;
+                    const imgKey = cert.image.split('/').pop() || baseKey.replace('.pdf', '.png');
+                    acc[baseKey] = {
                       type: 'file',
-                      name: key,
+                      name: baseKey,
                       content: `===========================================================
 VERIFIED CERTIFICATE DOCUMENT
 ===========================================================
-Certificate Name: ${cert.name}
-Issuer:           ${cert.issuer}
-Verification Key: SHA256-${Math.random().toString(16).substring(2, 10).toUpperCase()}
-Credential URL:   ${cert.ref}
+Certificate Name:  ${cert.name}
+Issuer:            ${cert.issuer}
+Issued Date:       ${cert.date}
+Verification Code: ${cert.verificationCode || 'VERIFIED-LEDGER'}
+Scope / Topics:    ${cert.description}
+PDF Document:      ${cert.ref}
+Image Preview:     ${cert.image}
+===========================================================
 `
+                    };
+                    acc[imgKey] = {
+                      type: 'file',
+                      name: imgKey,
+                      content: `[IMAGE ASSET] ${cert.image}\nCertificate: ${cert.name} (${cert.issuer})\nView this certificate in Finder: Finder > charan > certificates\nPreview image URL: ${cert.image}`
                     };
                     return acc;
                   }, {} as { [key: string]: FSNode })
-                : {
-                    'notice.txt': {
-                      type: 'file',
-                      name: 'notice.txt',
-                      content: `===========================================================
-CERTIFICATE ARCHIVES STATUS
-===========================================================
-Status: No certificates currently logged.
-Certifications are currently in progress / unavailable.
-`
-                    }
-                  }
+                : {}
             },
             'experience': {
               type: 'directory',
@@ -166,8 +165,7 @@ Certifications are currently in progress / unavailable.
                   content: `===========================================================
 EXPERIENCE RECORD TIMELINE
 ===========================================================
-// TODO: No professional work experience logged on current site.
-// Dynamic details can be logged inside src/data/portfolioData.ts.
+No professional work experience logged.
 `
                 }
               }

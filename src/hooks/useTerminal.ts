@@ -374,6 +374,7 @@ export function useTerminal(options?: UseTerminalOptions) {
 
     // Check secret ending trigger (unlock -> sudo -> ghost -> decrypt -> who)
     if (commandName === "who" && secretSequence.length === 4) {
+      setUserState("charan");
       setIsSecretEndingActive(true);
       setInput("");
       return;
